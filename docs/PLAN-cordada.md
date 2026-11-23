@@ -13,7 +13,6 @@ Pendiente de esta landing. Lo cerrado vive en `docs/CERRADO-cordada.md`; el deta
 ## Cables de Gustavo
 
 - **Subdominio `cordada.breakpoint.biz`**: agregarlo al proyecto `cordada` en Vercel (Settings → Domains) y crear el CNAME en el DNS de `breakpoint.biz`.
-- **Conectar el repo `TechAdminBK/cordada` al proyecto de Vercel** para que cada push publique solo. Hoy se publica con `vercel --prod`.
 - **Borrar el repo personal `gustavovivasmarquez-ship-it/cordada`**, que quedó sin uso.
 
 ## Bloqueado

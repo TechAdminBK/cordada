@@ -34,5 +34,5 @@ npm run build     # tipos + build de producción
 
 ## Publicación
 
-Proyecto de Vercel `breakpoint1/cordada`. Hoy se publica con `vercel --prod` desde esta carpeta;
-el repo todavía no está conectado a Vercel para deploy automático.
+Proyecto de Vercel `breakpoint1/cordada`, conectado al repo `TechAdminBK/cordada`: cada push a `main`
+publica en producción.
