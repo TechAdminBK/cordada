@@ -12,7 +12,6 @@ Pendiente de esta landing. Lo cerrado vive en `docs/CERRADO-cordada.md`; el deta
 
 ## Cables de Gustavo
 
-- **Destino del botón «Empezar un proyecto →».** En el diseño apunta al texto de relleno `[ENLACE DE CONTACTO]` (`design/cordada-landing.html`, visible en `src/generated/Landing.tsx`), así que en producción lleva a un 404 y la landing no tiene ninguna vía de contacto. Falta definir a dónde va: mail, formulario o agenda. Con el dato, es una línea en el diseño y `npm run generar`.
 - **Borrar el repo personal `gustavovivasmarquez-ship-it/cordada`**, que quedó sin uso.
 
 ## Bloqueado

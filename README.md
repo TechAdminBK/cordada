@@ -13,7 +13,8 @@ El marcado no se escribe a mano: **sale del diseño**.
 - `src/datos.ts` tiene las listas (ruta, compuerta, piezas, cifras, reglas), copiadas del componente del diseño.
 - `src/App.tsx` tiene lo único con estado: el brief y el chip elegido.
 
-Lo único que el script agrega al diseño es el enlace **Volver a Break Point** en el menú y en el pie.
+El script agrega dos cosas al diseño: el enlace **Volver a Break Point** en el menú y en el pie, y el destino del
+botón **Empezar un proyecto**, que en el diseño viene de relleno y va al formulario de contacto de Break Point.
 
 ## Cambiar la landing
 

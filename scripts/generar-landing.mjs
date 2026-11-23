@@ -22,6 +22,11 @@ const BREAKPOINT = 'https://breakpoint.biz';
 const VOLVER_NAV = `<a href="${BREAKPOINT}" style="color: #4A4A46; text-decoration: none">Volver a Break Point</a>`;
 const VOLVER_PIE = `<a href="${BREAKPOINT}" style="color: #0F1020; font-weight: 600; text-decoration: none">Volver a Break Point</a>`;
 
+// El diseño deja el botón "Empezar un proyecto" con un destino de relleno. Va al formulario de
+// contacto de Break Point (decisión de Gustavo, 23-nov-2026).
+const RELLENO_CONTACTO = 'href="[ENLACE DE CONTACTO]"';
+export const CONTACTO = 'https://www.breakpoint.biz/#empecemos';
+
 // ── 1. Sacar el template del bundle ──────────────────────────────────────────────────────────
 export function leerTemplate(html) {
   const abre = '<script type="__bundler/template">';
@@ -164,9 +169,17 @@ export function conBreakPoint(cuerpo) {
 // ── 3. Escribir ──────────────────────────────────────────────────────────────────────────────
 // Devuelve el contenido de los dos archivos sin escribirlos: lo usa el test que detecta si el
 // generado quedó desactualizado o alguien lo editó a mano.
+// Reemplaza el destino de relleno del diseño. Si el diseño deja de traerlo (o trae más de uno),
+// falla: mejor enterarse acá que publicar un botón roto.
+export function conContacto(cuerpo) {
+  const veces = cuerpo.split(RELLENO_CONTACTO).length - 1;
+  if (veces !== 1) throw new Error(`esperaba un destino de relleno de contacto en el diseño y hay ${veces}`);
+  return cuerpo.replace(RELLENO_CONTACTO, `href="${CONTACTO}"`);
+}
+
 export function construir() {
   const { cuerpo, css } = partes(leerTemplate(readFileSync(ORIGEN, 'utf8')));
-  const jsx = aJsx(conBreakPoint(cuerpo));
+  const jsx = aJsx(conContacto(conBreakPoint(cuerpo)));
   const tsx = `// GENERADO por scripts/generar-landing.mjs desde design/cordada-landing.html. No editar a mano:
 // para cambiar el marcado se cambia el diseño (o el script) y se vuelve a generar.
 import { Fragment, type CSSProperties } from 'react';

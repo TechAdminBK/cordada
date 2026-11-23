@@ -144,6 +144,13 @@ describe('render', () => {
     expect(html.match(/Volver a Break Point/g)).toHaveLength(2);
   });
 
+  it('el botón "Empezar un proyecto" lleva al formulario de contacto, no al relleno del diseño', () => {
+    expect(html).not.toContain('ENLACE DE CONTACTO');
+    expect(html.match(/href="https:\/\/www\.breakpoint\.biz\/#empecemos"/g)).toHaveLength(1);
+    // Ningún enlace queda con un destino entre corchetes.
+    expect(html).not.toMatch(/href="\[/);
+  });
+
   it('no deja ningún {{ }} del diseño sin resolver', () => {
     expect(html).not.toMatch(/\{\{|\}\}/);
   });

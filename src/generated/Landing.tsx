@@ -634,7 +634,7 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
             {" "}
             <div style={css({ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "12px", marginTop: "44px" })}>
               {" "}
-              <a href="[ENLACE DE CONTACTO]" className="cd-btn" style={css({ background: "#B4CC3A", color: "#0F1020", fontWeight: "800", fontSize: "17px", padding: "16px 28px", borderRadius: "14px", border: "2px solid #0F1020", textDecoration: "none", minHeight: "52px", boxSizing: "border-box", display: "inline-flex", alignItems: "center", gap: "10px" })}>
+              <a href="https://www.breakpoint.biz/#empecemos" className="cd-btn" style={css({ background: "#B4CC3A", color: "#0F1020", fontWeight: "800", fontSize: "17px", padding: "16px 28px", borderRadius: "14px", border: "2px solid #0F1020", textDecoration: "none", minHeight: "52px", boxSizing: "border-box", display: "inline-flex", alignItems: "center", gap: "10px" })}>
                 {"Empezar un proyecto "}
                 <span aria-hidden="true">
                   {"→"}
