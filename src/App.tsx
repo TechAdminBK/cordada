@@ -9,6 +9,7 @@ import {
   numeros,
   piezas,
   reglas,
+  breakpoint,
 } from './content';
 
 type Fondo = 'violeta' | 'azul' | 'suave' | 'tinta' | 'blanco';
@@ -35,6 +36,9 @@ function Header() {
             </a>
           ))}
         </div>
+        <a href={breakpoint.url} className="header__back">
+          {breakpoint.texto} <span aria-hidden="true">←</span>
+        </a>
         <a href="#empezar" className="btn btn--ink">
           {hero.cta}
         </a>
@@ -243,6 +247,7 @@ function Footer() {
         <Logo />
         <p className="mono">{cierre.pie}</p>
         <p>{cierre.copyright}</p>
+        <a href={breakpoint.url} className="footer__back">{breakpoint.texto}</a>
       </div>
     </footer>
   );

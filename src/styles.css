@@ -134,3 +134,10 @@ h1, h2, h3, p { margin: 0; }
 
 /* El botón del hero no se estira en la columna */
 .hero__inner > .btn { align-self: flex-start; }
+
+/* Enlace de vuelta a Break Point */
+.header__back { font-size: 13px; color: var(--muted); text-decoration: none; white-space: nowrap; }
+.header__back:hover { color: var(--tinta); }
+.footer__back { color: var(--tinta); font-weight: 600; text-decoration: none; }
+.footer__back:hover { text-decoration: underline; }
+@media (max-width: 760px) { .header__back { display: none; } }

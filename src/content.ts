@@ -98,6 +98,12 @@ export const reglas = {
   nota2: 'Lo que no se puede mecanizar queda declarado como juicio, con nombre y fecha. Un juicio declarado se puede discutir; uno escondido en un «listo», no.',
 } as const;
 
+// Vuelta a la cara pública de Break Point (la marca madre).
+export const breakpoint = {
+  url: 'https://breakpoint.biz',
+  texto: 'Volver a Break Point',
+} as const;
+
 export const cierre = {
   kicker: 'Escribí el criterio primero',
   titulo: 'Decinos qué es terminado.',
