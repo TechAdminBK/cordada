@@ -4,6 +4,8 @@ Append-only, lo más nuevo arriba. Una línea por ítem. El detalle vive en git.
 
 | fecha | qué era | cómo cerró | SHA / evidencia |
 |---|---|---|---|
+| 2026-11-23 | C5 (aprobada por Gustavo el 23-nov): versión en inglés en `/en`, con su título, descripción, canonical, imagen para compartir y `hreflang` recíproco; un enlace de idioma en el menú y en el pie | hecho: el mismo marcado del diseño con los textos pasados por un diccionario; un test rompe si queda un texto sin traducir. Medido en local: sin errores de hidratación ni desborde en 1280 y 390 px | este commit |
+| 2026-11-23 | C6 (aprobada por Gustavo el 23-nov): la cabecera queda fija al hacer scroll | hecho: el recorte horizontal de la página pasó de `overflow-x: hidden` a `clip`. Medido: a 2000 px de scroll la cabecera queda en 0 (antes -2000) y las 97 cajas medidas coinciden con producción | este commit |
 | 2026-11-23 | Posicionamiento C4 (aprobada por Gustavo el 23-nov): landmark `<main>` alrededor del contenido, puesto por el generador | hecho: geometría idéntica a producción en 1280 y 390 px (108 cajas, 0 diferencias), sin errores de consola | este commit |
 | 2026-11-23 | Posicionamiento C2 (aprobada por Gustavo el 23-nov): el contenido viene en el HTML inicial. El build corre un prerender y el navegador hidrata | hecho: 967 palabras en el HTML inicial (antes 0); en local hidrata sin errores de consola, con chips y sin desborde en 1280 y 390 px | este commit |
 | 2026-11-23 | Posicionamiento C3 (aprobada por Gustavo el 23-nov): `robots.txt`, `sitemap.xml`, canonical, Open Graph con imagen de 1200x630, `twitter:card`, JSON-LD e ícono | hecho, con tests | este commit |

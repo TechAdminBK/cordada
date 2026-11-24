@@ -1,12 +1,12 @@
 import { StrictMode } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
-import { App } from './App';
+import { App, langDeRuta } from './App';
 import './generated/base.css';
 
 const raiz = document.getElementById('root')!;
 const arbol = (
   <StrictMode>
-    <App />
+    <App lang={langDeRuta(window.location.pathname)} />
   </StrictMode>
 );
 

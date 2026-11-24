@@ -10,6 +10,8 @@ Pendiente de esta landing. Lo cerrado vive en `docs/CERRADO-cordada.md`; el deta
 2. **Falsos positivos y mensaje engañoso del conversor.** Ancla: `scripts/generar-landing.mjs:86`. Premisa: `title="a = 'b'"` lanza por comilla simple, y `x=a` o `x= "a"` se reportan como "booleano". Falla cerrado; hoy el diseño no trae esos casos. Salida: el chequeo mira solo el delimitador del valor y el mensaje nombra el caso real. Prioridad baja.
 3. **El test de literales del diseño solo mira comillas simples.** Ancla: `src/landing.test.tsx:104`. Premisa: un literal con comillas dobles o backtick en el guion del diseño no se compara contra `src/datos.ts` (hoy hay 0). Salida: el test cubre los tres delimitadores. Prioridad baja.
 4. **`/favicon.ico` responde 404.** Ancla: `index.html:9`. Premisa: el ícono real es `/favicon.svg` y carga bien, pero los navegadores piden además `/favicon.ico` y eso deja un error de consola en cada visita (visto en producción, 23-nov-2026). Salida: `/favicon.ico` responde 200. Prioridad baja.
+5. **El generador deja pasar sin traducir un atributo con texto que no esté en su lista.** Ancla: `scripts/generar-landing.mjs:91`. Premisa: solo `placeholder`, `aria-label`, `title` y `alt` pasan por `t()`; un `value` o `aria-valuetext` con texto saldría en español en `/en` y ningún test lo vería (hoy el diseño no trae ninguno). Salida: el generador falla ante un atributo con letras fuera de la lista. Prioridad baja.
+6. **La cabecera fija y el chequeo de idioma se prueban por texto, no por comportamiento.** Ancla: `src/ingles.test.tsx:150`. Premisa: el test de C6 mira la regla CSS como cadena, y el de «sin palabras en español» quita las etiquetas antes de mirar, así que no ve atributos. Salida: un test que mida la cabecera tras hacer scroll, y el chequeo de idioma con atributos incluidos. Prioridad baja.
 
 ## Cables de Gustavo
 
@@ -24,6 +26,7 @@ Pendiente de esta landing. Lo cerrado vive en `docs/CERRADO-cordada.md`; el deta
   - Bloquea 3: **Cordada no tiene aviso de privacidad.** El consentimiento de Arcus enlaza a `arcus.breakpoint.biz/privacidad`. Desbloquea: Gustavo define si Cordada usa ese aviso o uno propio.
   - Al activar: `/privacidad` no puede servirse con el HTML prerenderizado de `/` (`scripts/prerender.mjs` siempre escribe la home). El rewrite de `/privacidad` tiene que apuntar a una página propia prerenderizada o a un shell con el root vacío, como hace Arcus con `/admin`; si no, la hidratación no coincide.
   - Al integrar la rama `feat/contacto`: choca con `main` en `scripts/generar-landing.mjs` y `src/generated/Landing.tsx`. Se resuelve el generador dejando `aJsx(conMain(conContacto(conBreakPoint(cuerpo))))` y se regenera; `Landing.tsx` nunca se resuelve a mano.
+  - Al integrar con la versión en inglés: `src/App.tsx` tiene que seguir pasando `t`, `idioma` y `lang` a `Landing` (sin eso la página rompe en los dos idiomas). El formulario, el aviso y `BotonContacto` traen textos en español que no pasan por `t()`: hay que traducirlos o no mostrarlos en `/en`, y decidir si existe `/en/privacidad`.
   - Además hace falta: variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` en el proyecto de Vercel de Cordada, y sumar el origen "Cordada" al panel de leads de `arcus-web` (`src/admin/SeccionLeads.tsx:25`).
 
 ## Decisiones abiertas

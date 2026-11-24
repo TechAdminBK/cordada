@@ -7,14 +7,14 @@ import type { Vista } from '../datos';
 // no están en los tipos de React, por eso pasan por este molde.
 const css = (o: Record<string, string>) => o as CSSProperties;
 
-export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, stats, rules }: Vista) {
+export function Landing({ t, idioma, accent, brief, onBrief, chips, route, gate, pieces, stats, rules }: Vista) {
   return (
-      <div style={css({ minHeight: "100vh", background: "#FFFFFF", color: "#0F1020", fontFamily: "'Archivo', system-ui, sans-serif", fontSize: "16px", lineHeight: "1.6", WebkitFontSmoothing: "antialiased", overflowX: "hidden" })}>
+      <div className="cd-pagina" style={css({ minHeight: "100vh", background: "#FFFFFF", color: "#0F1020", fontFamily: "'Archivo', system-ui, sans-serif", fontSize: "16px", lineHeight: "1.6", WebkitFontSmoothing: "antialiased" })}>
         {" "}
         {" "}
         <header style={css({ position: "sticky", top: "0", zIndex: "10", background: "rgba(255,255,255,.9)", backdropFilter: "blur(12px)", borderBottom: "1px solid #ECECE8" })}>
           {" "}
-          <nav aria-label="Principal" style={css({ maxWidth: "1240px", margin: "0 auto", padding: "14px 24px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "16px" })}>
+          <nav aria-label={t("Principal")} style={css({ maxWidth: "1240px", margin: "0 auto", padding: "14px 24px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "16px" })}>
             {" "}
             <a href="#inicio" style={css({ display: "flex", alignItems: "center", gap: "10px", color: "#0F1020", textDecoration: "none" })}>
               {" "}
@@ -32,7 +32,7 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
               </span>
               {" "}
               <span style={css({ fontWeight: "800", fontStretch: "125%", fontSize: "19px", letterSpacing: "-.01em" })}>
-                {"CORDADA"}
+                {t("CORDADA")}
               </span>
               {" "}
             </a>
@@ -40,27 +40,30 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
             <div style={css({ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 26px", fontSize: "14px", fontWeight: "500" })}>
               {" "}
               <a href="#compuerta" style={css({ color: "#4A4A46", textDecoration: "none" })}>
-                {"Compuerta"}
+                {t("Compuerta")}
               </a>
               {" "}
               <a href="#piezas" style={css({ color: "#4A4A46", textDecoration: "none" })}>
-                {"Cómo funciona"}
+                {t("Cómo funciona")}
               </a>
               {" "}
               <a href="#numeros" style={css({ color: "#4A4A46", textDecoration: "none" })}>
-                {"Números"}
+                {t("Números")}
               </a>
               {" "}
               <a href="#reglas" style={css({ color: "#4A4A46", textDecoration: "none" })}>
-                {"Reglas"}
+                {t("Reglas")}
               </a>
               {" "}
               <a href="https://breakpoint.biz" style={css({ color: "#4A4A46", textDecoration: "none" })}>
-                {"Volver a Break Point"}
+                {t("Volver a Break Point")}
+              </a>
+              <a href={idioma.href} hrefLang={idioma.codigo} lang={idioma.codigo} style={css({ color: "#4A4A46", textDecoration: "none" })}>
+                {idioma.label}
               </a>
               {" "}
               <a href="#empezar" className="cd-btn" style={css({ background: "#0F1020", color: "#FFFFFF", fontWeight: "700", padding: "11px 18px", borderRadius: "999px", textDecoration: "none", minHeight: "44px", boxSizing: "border-box", display: "inline-flex", alignItems: "center", gap: "8px" })}>
-                {"Empezar un proyecto "}
+                {t("Empezar un proyecto ")}
                 <span aria-hidden="true" style={css({ width: "8px", height: "8px", borderRadius: "50%", background: "#B4CC3A" })}>
                 </span>
               </a>
@@ -95,22 +98,22 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
                   {" "}
                   <span className="cd-pulse" style={css({ width: "8px", height: "8px", borderRadius: "50%", background: "#4A2FBD", display: "inline-block" })}>
                   </span>
-                  {" Desarrollo con agentes · control de entrega "}
+                  {t(" Desarrollo con agentes · control de entrega ")}
                 </p>
                 {" "}
                 <h1 style={css({ margin: "0", fontWeight: "800", fontStretch: "125%", fontSize: "clamp(42px, 6.4vw, 92px)", lineHeight: ".98", letterSpacing: "-.035em", textWrap: "balance" })}>
-                  {"Tu agente entregó más código del que "}
+                  {t("Tu agente entregó más código del que ")}
                   <span style={css({ color: "#4A2FBD", textDecoration: "underline", textDecorationColor: accent, textDecorationThickness: ".12em", textUnderlineOffset: ".12em" })}>
-                    {"podés revisar."}
+                    {t("podés revisar.")}
                   </span>
                 </h1>
                 {" "}
                 <p style={css({ margin: "30px 0 0", maxWidth: "58ch", fontSize: "20px", lineHeight: "1.55", color: "#4A4A46" })}>
-                  {"Cordada no hace al agente más inteligente. Le saca la opción de entregar algo que nadie controló, y convierte «me parece que está bien» en "}
+                  {t("Cordada no hace al agente más inteligente. Le saca la opción de entregar algo que nadie controló, y convierte «me parece que está bien» en ")}
                   <b style={css({ color: "#0F1020", fontWeight: "700" })}>
-                    {"pasa o no pasa"}
+                    {t("pasa o no pasa")}
                   </b>
-                  {"."}
+                  {t(".")}
                 </p>
                 {" "}
                 {" "}
@@ -119,15 +122,15 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
                   <label htmlFor="cd-brief" style={css({ display: "flex", alignItems: "center", gap: "8px", fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", fontWeight: "500", letterSpacing: ".12em", textTransform: "uppercase", color: "#5C5C57", marginBottom: "10px" })}>
                     {" "}
                     <span style={css({ color: "#4A2FBD" })}>
-                      {"›"}
+                      {t("›")}
                     </span>
-                    {" Contanos qué cuenta como terminado"}
+                    {t(" Contanos qué cuenta como terminado")}
                     <span className="cd-cursor" style={css({ display: "inline-block", width: "8px", height: "14px", background: "#4A2FBD" })}>
                     </span>
                     {" "}
                   </label>
                   {" "}
-                  <textarea id="cd-brief" rows={3} value={brief} onChange={onBrief} placeholder="Pegá el brief, el PR o la spec. Escribimos los criterios antes de que el agente toque un archivo." style={css({ width: "100%", boxSizing: "border-box", resize: "vertical", background: "transparent", border: "0", color: "#0F1020", fontFamily: "'Archivo', system-ui, sans-serif", fontSize: "18px", lineHeight: "1.5", padding: "4px 0", outline: "none" })}>
+                  <textarea id="cd-brief" rows={3} value={brief} onChange={onBrief} placeholder={t("Pegá el brief, el PR o la spec. Escribimos los criterios antes de que el agente toque un archivo.")} style={css({ width: "100%", boxSizing: "border-box", resize: "vertical", background: "transparent", border: "0", color: "#0F1020", fontFamily: "'Archivo', system-ui, sans-serif", fontSize: "18px", lineHeight: "1.5", padding: "4px 0", outline: "none" })}>
                   </textarea>
                   {" "}
                   <div style={css({ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "14px", marginTop: "14px", paddingTop: "16px", borderTop: "1px solid #ECECE8" })}>
@@ -157,9 +160,9 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
                     </div>
                     {" "}
                     <a href="#empezar" className="cd-btn" style={css({ background: "#0F1020", color: "#FFFFFF", fontWeight: "700", fontSize: "15px", padding: "12px 22px", borderRadius: "12px", textDecoration: "none", minHeight: "46px", boxSizing: "border-box", display: "inline-flex", alignItems: "center", gap: "8px" })}>
-                      {"Armar el contrato "}
+                      {t("Armar el contrato ")}
                       <span aria-hidden="true" style={css({ color: "#B4CC3A" })}>
-                        {"→"}
+                        {t("→")}
                       </span>
                     </a>
                     {" "}
@@ -170,16 +173,16 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
               </div>
               {" "}
               {" "}
-              <aside aria-label="Ruta de una entrega" className="cd-rise" style={css({ flex: "1 1 360px", minWidth: "0", background: "#0F1020", color: "#FFFFFF", borderRadius: "24px", padding: "26px 26px 12px", boxShadow: "0 30px 60px -30px rgba(17,17,17,.5)" })}>
+              <aside aria-label={t("Ruta de una entrega")} className="cd-rise" style={css({ flex: "1 1 360px", minWidth: "0", background: "#0F1020", color: "#FFFFFF", borderRadius: "24px", padding: "26px 26px 12px", boxShadow: "0 30px 60px -30px rgba(17,17,17,.5)" })}>
                 {" "}
                 <div style={css({ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: "12px", marginBottom: "24px", fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", letterSpacing: ".14em", textTransform: "uppercase" })}>
                   {" "}
                   <span style={css({ color: "#A6A6A0" })}>
-                    {"Ruta de entrega"}
+                    {t("Ruta de entrega")}
                   </span>
                   {" "}
                   <span style={css({ color: "#B4CC3A" })}>
-                    {"● corrida real"}
+                    {t("● corrida real")}
                   </span>
                   {" "}
                 </div>
@@ -227,7 +230,7 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
                 </div>
                 {" "}
                 <p style={css({ margin: "22px -26px 0", padding: "14px 26px", borderTop: "1px solid #2A2A27", fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", color: "#A6A6A0" })}>
-                  {"commit 29be33c · 30-oct-2026"}
+                  {t("commit 29be33c · 30-oct-2026")}
                 </p>
                 {" "}
               </aside>
@@ -237,88 +240,88 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
           </section>
           {" "}
           {" "}
-          <div aria-label="Funciona con cualquier stack" style={css({ overflow: "hidden", padding: "22px 0", background: "#0F1020" })}>
+          <div aria-label={t("Funciona con cualquier stack")} style={css({ overflow: "hidden", padding: "22px 0", background: "#0F1020" })}>
             {" "}
             <div className="cd-track" style={css({ display: "flex", width: "max-content", gap: "40px", fontWeight: "800", fontStretch: "125%", fontSize: "24px", letterSpacing: "-.01em", color: "#FFFFFF", whiteSpace: "nowrap", alignItems: "center" })}>
               {" "}
               <span>
-                {"Cualquier modelo"}
+                {t("Cualquier modelo")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#B4CC3A" })}>
               </span>
               <span>
-                {"Cualquier orquestador"}
+                {t("Cualquier orquestador")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#3F7BEA" })}>
               </span>
               <span>
-                {"Código"}
+                {t("Código")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#EDEAFB" })}>
               </span>
               <span>
-                {"Documentos"}
+                {t("Documentos")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#3F7BEA" })}>
               </span>
               <span>
-                {"Multi-agente"}
+                {t("Multi-agente")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#9C8CEB" })}>
               </span>
               <span>
-                {"Git & CI"}
+                {t("Git & CI")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#B4CC3A" })}>
               </span>
               <span>
-                {"Specs"}
+                {t("Specs")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#3F7BEA" })}>
               </span>
               <span>
-                {"Auditorías"}
+                {t("Auditorías")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#EDEAFB" })}>
               </span>
               {" "}
               <span aria-hidden="true">
-                {"Cualquier modelo"}
+                {t("Cualquier modelo")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#B4CC3A" })}>
               </span>
               <span aria-hidden="true">
-                {"Cualquier orquestador"}
+                {t("Cualquier orquestador")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#3F7BEA" })}>
               </span>
               <span aria-hidden="true">
-                {"Código"}
+                {t("Código")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#EDEAFB" })}>
               </span>
               <span aria-hidden="true">
-                {"Documentos"}
+                {t("Documentos")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#3F7BEA" })}>
               </span>
               <span aria-hidden="true">
-                {"Multi-agente"}
+                {t("Multi-agente")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#9C8CEB" })}>
               </span>
               <span aria-hidden="true">
-                {"Git & CI"}
+                {t("Git & CI")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#B4CC3A" })}>
               </span>
               <span aria-hidden="true">
-                {"Specs"}
+                {t("Specs")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#3F7BEA" })}>
               </span>
               <span aria-hidden="true">
-                {"Auditorías"}
+                {t("Auditorías")}
               </span>
               <span aria-hidden="true" style={css({ width: "14px", height: "14px", borderRadius: "50%", background: "#EDEAFB" })}>
               </span>
@@ -335,7 +338,7 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
               <div style={css({ flex: "0 1 auto", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: "clamp(220px, 26vw, 340px)", aspectRatio: "1", borderRadius: "50%", background: "#4A2FBD" })}>
                 {" "}
                 <p style={css({ margin: "0", fontWeight: "900", fontStretch: "125%", fontSize: "clamp(110px, 14vw, 190px)", lineHeight: ".8", letterSpacing: "-.06em", color: "#B4CC3A" })}>
-                  {"21"}
+                  {t("21")}
                 </p>
                 {" "}
               </div>
@@ -343,11 +346,11 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
               <div style={css({ flex: "1 1 420px", minWidth: "0" })}>
                 {" "}
                 <p style={css({ margin: "0", fontWeight: "700", fontStretch: "110%", fontSize: "clamp(26px, 3.2vw, 40px)", lineHeight: "1.15", letterSpacing: "-.02em", textWrap: "balance" })}>
-                  {"hallazgos verificados en un documento que ya tenía el visto bueno del revisor y cinco rondas de corrección encima."}
+                  {t("hallazgos verificados en un documento que ya tenía el visto bueno del revisor y cinco rondas de corrección encima.")}
                 </p>
                 {" "}
                 <p style={css({ margin: "20px 0 0", maxWidth: "60ch", color: "#4A4A46" })}>
-                  {"Dos de esas cifras eran lógicamente imposibles entre sí y habían sobrevivido a una auditoría de 58 números. Una sola sesión."}
+                  {t("Dos de esas cifras eran lógicamente imposibles entre sí y habían sobrevivido a una auditoría de 58 números. Una sola sesión.")}
                 </p>
                 {" "}
               </div>
@@ -362,15 +365,15 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
             <div style={css({ maxWidth: "1240px", margin: "0 auto", padding: "110px 24px" })}>
               {" "}
               <p style={css({ margin: "0 0 18px", display: "inline-block", fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", fontWeight: "700", letterSpacing: ".14em", textTransform: "uppercase", color: "#4A2FBD", background: "#EDEAFB", borderRadius: "999px", padding: "6px 12px" })}>
-                {"01 — La compuerta"}
+                {t("01 — La compuerta")}
               </p>
               {" "}
               <h2 style={css({ margin: "0", maxWidth: "18ch", fontWeight: "800", fontStretch: "125%", fontSize: "clamp(34px, 4.6vw, 64px)", lineHeight: "1.02", letterSpacing: "-.03em" })}>
-                {"Un lote se aplica entero o no se aplica."}
+                {t("Un lote se aplica entero o no se aplica.")}
               </h2>
               {" "}
               <p style={css({ margin: "22px 0 48px", maxWidth: "62ch", fontSize: "18px", color: "#4A4A46" })}>
-                {"Cuatro eventos reales. Ninguno es una simulación: dos entregas fueron rechazadas por la propia compuerta antes de tocar un archivo."}
+                {t("Cuatro eventos reales. Ninguno es una simulación: dos entregas fueron rechazadas por la propia compuerta antes de tocar un archivo.")}
               </p>
               {" "}
               <div style={css({ background: "#0F1020", borderRadius: "20px", overflow: "hidden", fontFamily: "'JetBrains Mono', monospace", boxShadow: "10px 10px 0 #4A2FBD" })}>
@@ -387,7 +390,7 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
                   </span>
                   {" "}
                   <span style={css({ marginLeft: "10px", fontSize: "12px", color: "#A6A6A0" })}>
-                    {"cordada gate --log · 30-oct-2026"}
+                    {t("cordada gate --log · 30-oct-2026")}
                   </span>
                   {" "}
                 </div>
@@ -428,15 +431,15 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
             <div style={css({ maxWidth: "1240px", margin: "0 auto", padding: "110px 24px" })}>
               {" "}
               <p style={css({ margin: "0 0 18px", display: "inline-block", fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", fontWeight: "700", letterSpacing: ".14em", textTransform: "uppercase", color: "#4A2FBD", background: "#EDEAFB", borderRadius: "999px", padding: "6px 12px" })}>
-                {"02 — El producto"}
+                {t("02 — El producto")}
               </p>
               {" "}
               <h2 style={css({ margin: "0", maxWidth: "20ch", fontWeight: "800", fontStretch: "125%", fontSize: "clamp(34px, 4.6vw, 64px)", lineHeight: "1.02", letterSpacing: "-.03em" })}>
-                {"Cuatro piezas. Cada una contesta una pregunta."}
+                {t("Cuatro piezas. Cada una contesta una pregunta.")}
               </h2>
               {" "}
               <p style={css({ margin: "22px 0 56px", maxWidth: "62ch", fontSize: "18px", color: "#4A4A46" })}>
-                {"Vale para código y para agentes. No depende de qué modelo escriba, ni de qué framework orqueste."}
+                {t("Vale para código y para agentes. No depende de qué modelo escriba, ni de qué framework orqueste.")}
               </p>
               {" "}
               <div style={css({ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))", gap: "20px" })}>
@@ -477,15 +480,15 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
             <div style={css({ maxWidth: "1240px", margin: "0 auto", padding: "110px 24px" })}>
               {" "}
               <p style={css({ margin: "0 0 18px", display: "inline-block", fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", fontWeight: "700", letterSpacing: ".14em", textTransform: "uppercase", color: "#4A2FBD", background: "#EDEAFB", borderRadius: "999px", padding: "6px 12px" })}>
-                {"03 — El mecanismo, en números"}
+                {t("03 — El mecanismo, en números")}
               </p>
               {" "}
               <h2 style={css({ margin: "0", maxWidth: "20ch", fontWeight: "800", fontStretch: "125%", fontSize: "clamp(34px, 4.6vw, 64px)", lineHeight: "1.02", letterSpacing: "-.03em" })}>
-                {"Todo esto salió de una sola sesión."}
+                {t("Todo esto salió de una sola sesión.")}
               </h2>
               {" "}
               <p style={css({ margin: "22px 0 56px", maxWidth: "62ch", fontSize: "18px", color: "#4A4A46" })}>
-                {"Seis agentes, cinco rondas, cuatro commits y un documento de 64 láminas. Cada número con su origen."}
+                {t("Seis agentes, cinco rondas, cuatro commits y un documento de 64 láminas. Cada número con su origen.")}
               </p>
               {" "}
               <div style={css({ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))", gap: "16px" })}>
@@ -526,17 +529,17 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
                 <div style={css({ flex: "1 1 520px", minWidth: "0" })}>
                   {" "}
                   <p style={css({ margin: "0 0 18px", display: "inline-block", fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", fontWeight: "700", letterSpacing: ".14em", textTransform: "uppercase", color: "#4A2FBD", background: "#EDEAFB", borderRadius: "999px", padding: "6px 12px" })}>
-                    {"04 — Reglas con un cadáver atrás"}
+                    {t("04 — Reglas con un cadáver atrás")}
                   </p>
                   {" "}
                   <h2 style={css({ margin: "0", maxWidth: "22ch", fontWeight: "800", fontStretch: "125%", fontSize: "clamp(34px, 4.6vw, 64px)", lineHeight: "1.02", letterSpacing: "-.03em" })}>
-                    {"Cada regla nació de una falla. Y cada una tiene su equivalente en código."}
+                    {t("Cada regla nació de una falla. Y cada una tiene su equivalente en código.")}
                   </h2>
                   {" "}
                 </div>
                 {" "}
                 <p style={css({ flex: "0 1 380px", margin: "0", fontSize: "16px", color: "#4A4A46" })}>
-                  {"El código tiene un oráculo que se ejecuta: compilador, tipos, tests. Cordada aporta poco donde el test ya decide, y mucho donde no hay máquina que conteste."}
+                  {t("El código tiene un oráculo que se ejecuta: compilador, tipos, tests. Cordada aporta poco donde el test ya decide, y mucho donde no hay máquina que conteste.")}
                 </p>
                 {" "}
               </div>
@@ -565,7 +568,7 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
                     <div style={css({ marginTop: "auto", paddingTop: "14px", borderTop: "2px dashed #E2E2DC" })}>
                       {" "}
                       <p style={css({ margin: "0 0 4px", fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", letterSpacing: ".1em", textTransform: "uppercase", color: "#5C5C57" })}>
-                        {"En código"}
+                        {t("En código")}
                       </p>
                       {" "}
                       <p style={css({ margin: "0", fontSize: "14px", lineHeight: "1.6", color: "#3A3A36" })}>
@@ -599,11 +602,11 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
             <div style={css({ position: "relative", maxWidth: "1240px", margin: "0 auto", padding: "104px 24px" })}>
               {" "}
               <p style={css({ margin: "0", maxWidth: "22ch", fontWeight: "900", fontStretch: "125%", fontSize: "clamp(32px, 4.8vw, 68px)", lineHeight: "1.02", letterSpacing: "-.035em", textWrap: "balance" })}>
-                {"«Los tests pasan» y «esto funciona» no son la misma afirmación."}
+                {t("«Los tests pasan» y «esto funciona» no son la misma afirmación.")}
               </p>
               {" "}
               <p style={css({ margin: "28px 0 0", maxWidth: "56ch", fontSize: "18px", fontWeight: "500" })}>
-                {"Lo que no se puede mecanizar queda declarado como juicio, con nombre y fecha. Un juicio declarado se puede discutir; uno escondido en un «listo», no."}
+                {t("Lo que no se puede mecanizar queda declarado como juicio, con nombre y fecha. Un juicio declarado se puede discutir; uno escondido en un «listo», no.")}
               </p>
               {" "}
             </div>
@@ -622,28 +625,28 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
             <div style={css({ position: "relative", maxWidth: "1240px", margin: "0 auto", padding: "130px 24px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" })}>
               {" "}
               <p style={css({ margin: "0 0 22px", fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", fontWeight: "500", letterSpacing: ".16em", textTransform: "uppercase", color: "#E4DCFF" })}>
-                {"Escribí el criterio primero"}
+                {t("Escribí el criterio primero")}
               </p>
               {" "}
               <h2 style={css({ margin: "0", maxWidth: "16ch", fontWeight: "900", fontStretch: "125%", fontSize: "clamp(40px, 6.6vw, 96px)", lineHeight: ".98", letterSpacing: "-.04em", textWrap: "balance" })}>
-                {"Decinos qué es "}
+                {t("Decinos qué es ")}
                 <span style={css({ color: "#B4CC3A" })}>
-                  {"terminado."}
+                  {t("terminado.")}
                 </span>
-                {" La compuerta hace el resto."}
+                {t(" La compuerta hace el resto.")}
               </h2>
               {" "}
               <div style={css({ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "12px", marginTop: "44px" })}>
                 {" "}
                 <a href="https://www.breakpoint.biz/#empecemos" className="cd-btn" style={css({ background: "#B4CC3A", color: "#0F1020", fontWeight: "800", fontSize: "17px", padding: "16px 28px", borderRadius: "14px", border: "2px solid #0F1020", textDecoration: "none", minHeight: "52px", boxSizing: "border-box", display: "inline-flex", alignItems: "center", gap: "10px" })}>
-                  {"Empezar un proyecto "}
+                  {t("Empezar un proyecto ")}
                   <span aria-hidden="true">
-                    {"→"}
+                    {t("→")}
                   </span>
                 </a>
                 {" "}
                 <a href="#compuerta" style={css({ color: "#FFFFFF", fontWeight: "600", fontSize: "17px", padding: "16px 28px", borderRadius: "14px", border: "2px solid rgba(255,255,255,.6)", textDecoration: "none", minHeight: "52px", boxSizing: "border-box", display: "inline-flex", alignItems: "center" })}>
-                  {"Ver la compuerta"}
+                  {t("Ver la compuerta")}
                 </a>
                 {" "}
               </div>
@@ -674,21 +677,24 @@ export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, st
               </span>
               {" "}
               <span style={css({ fontWeight: "800", fontStretch: "125%", color: "#0F1020" })}>
-                {"CORDADA"}
+                {t("CORDADA")}
               </span>
               {" "}
             </span>
             {" "}
             <span style={css({ fontFamily: "'JetBrains Mono', monospace", fontSize: "12px" })}>
-              {"Cada número de esta página sale del registro de una sesión real · commit 29be33c"}
+              {t("Cada número de esta página sale del registro de una sesión real · commit 29be33c")}
             </span>
             {" "}
             <span>
-              {"© 2026 Cordada"}
+              {t("© 2026 Cordada")}
             </span>
             {" "}
             <a href="https://breakpoint.biz" style={css({ color: "#0F1020", fontWeight: "600", textDecoration: "none" })}>
-              {"Volver a Break Point"}
+              {t("Volver a Break Point")}
+            </a>
+            <a href={idioma.href} hrefLang={idioma.codigo} lang={idioma.codigo} style={css({ color: "#0F1020", fontWeight: "600", textDecoration: "none" })}>
+              {idioma.label}
             </a>
             {" "}
           </div>

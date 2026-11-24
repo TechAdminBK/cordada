@@ -64,6 +64,10 @@ export type Chip = { label: string; color: string; on: boolean; off: boolean; pi
 
 // Lo que el marcado generado recibe: los mismos nombres que usa el diseño en sus {{ }}.
 export type Vista = {
+  /** Traduce un texto del marcado; en español devuelve el mismo texto. */
+  t: (s: string) => string;
+  /** Enlace a la otra versión de idioma. */
+  idioma: { href: string; codigo: string; label: string };
   accent: string;
   brief: string;
   onBrief: (e: ChangeEvent<HTMLTextAreaElement>) => void;

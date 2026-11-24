@@ -7,7 +7,9 @@
 //   src/generated/Landing.tsx   el marcado convertido a JSX, con sus estilos inline tal cual
 //   src/generated/base.css      el CSS global del diseño (keyframes, hovers, foco)
 //
-// Lo único que este script agrega al diseño es el enlace de vuelta a Break Point (encabezado y pie).
+// Lo que este script agrega al diseño: el enlace de vuelta a Break Point y el de la otra versión de
+// idioma (encabezado y pie), el <main>, y la clase que deja fija la cabecera. Todo texto pasa por
+// t(), que en español devuelve lo mismo y en inglés lo busca en src/en.ts.
 // Los datos de las listas (ruta, compuerta, piezas, cifras, reglas) viven en src/datos.ts.
 
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
@@ -83,9 +85,11 @@ function estilo(valor) {
   return `style={css({ ${props.join(', ')} })}`;
 }
 
-const RENOMBRAR = { class: 'className', for: 'htmlFor' };
+const RENOMBRAR = { class: 'className', for: 'htmlFor', hreflang: 'hrefLang' };
 const EVENTOS = { 'sc-camel-on-click': 'onClick', 'sc-camel-on-change': 'onChange' };
 const DESCARTAR = /^(hint-|data-canvas-)/;
+// Atributos con texto que lee una persona: pasan por t() igual que los nodos de texto.
+const TRADUCIBLES = new Set(['placeholder', 'aria-label', 'title', 'alt']);
 
 function atributos(texto) {
   if (/=\s*'/.test(texto)) throw new Error(`atributo con comilla simple sin soporte: ${texto.slice(0, 60)}`);
@@ -100,6 +104,7 @@ function atributos(texto) {
     else if (EVENTOS[nombre]) out.push(`${EVENTOS[nombre]}={${expresion(valor)}}`);
     else if (nombre === 'rows') out.push(`rows={${Number(valor)}}`);
     else if (valor.includes('{{')) out.push(`${RENOMBRAR[nombre] ?? nombre}={${expresion(valor)}}`);
+    else if (TRADUCIBLES.has(nombre)) out.push(`${nombre}={t(${JSON.stringify(valor)})}`);
     else out.push(`${RENOMBRAR[nombre] ?? nombre}=${JSON.stringify(valor)}`);
   }
   return out;
@@ -112,7 +117,7 @@ function texto(crudo) {
   if (t === ' ') return '{" "}';
   return t.split(/(\{\{\s*[^}]+?\s*\}\})/).filter(Boolean).map((p) => {
     const b = p.match(/^\{\{\s*([^}]+?)\s*\}\}$/);
-    return b ? `{${b[1]}}` : `{${JSON.stringify(p)}}`;
+    return b ? `{${b[1]}}` : `{t(${JSON.stringify(p)})}`;
   }).join('');
 }
 
@@ -177,6 +182,32 @@ export function conContacto(cuerpo) {
   return cuerpo.replace(RELLENO_CONTACTO, `href="${CONTACTO}"`);
 }
 
+// Enlace a la otra versión de idioma (C5). El diseño es de un solo idioma y no lo trae: va al lado
+// de cada "Volver a Break Point", con su mismo estilo.
+export function conIdioma(cuerpo) {
+  const marca = '">Volver a Break Point</a>';
+  const partes = cuerpo.split(marca);
+  if (partes.length !== 3) throw new Error(`esperaba dos enlaces a Break Point para sumar el de idioma y hay ${partes.length - 1}`);
+  return partes.map((parte, i) => {
+    if (i === partes.length - 1) return parte;
+    const estilo = parte.slice(parte.lastIndexOf('style="') + 'style="'.length);
+    return `${parte}${marca}<a href="{{idioma.href}}" hreflang="{{idioma.codigo}}" lang="{{idioma.codigo}}" style="${estilo}">{{idioma.label}}</a>`;
+  }).join('');
+}
+
+// La cabecera es sticky en el diseño, pero el contenedor de la página trae overflow-x: hidden, que
+// lo vuelve contenedor de scroll y la anula (C6). El recorte horizontal pasa a una clase que usa
+// overflow-x: clip donde existe: recorta igual y no crea contenedor de scroll.
+export const CLASE_PAGINA = 'cd-pagina';
+export const CSS_PAGINA = `.${CLASE_PAGINA}{overflow-x:hidden}@supports (overflow:clip){.${CLASE_PAGINA}{overflow-x:clip}}`;
+export function conCabeceraFija(cuerpo) {
+  const abre = cuerpo.slice(0, cuerpo.indexOf('>') + 1);
+  const recorte = '; overflow-x: hidden';
+  if (!abre.startsWith('<div style="min-height: 100vh') || abre.includes('class=')) throw new Error('el contenedor de la página no es el que esperaba');
+  if (abre.split(recorte).length !== 2) throw new Error('el contenedor de la página ya no trae "; overflow-x: hidden": revisar conCabeceraFija');
+  return abre.replace(recorte, '').replace('<div ', `<div class="${CLASE_PAGINA}" `) + cuerpo.slice(abre.length);
+}
+
 // El diseño no trae <main>. Lectores de pantalla y rastreadores lo usan para ubicar el contenido,
 // así que todo lo que hay entre la cabecera y el pie queda dentro de uno. El contenedor de la
 // página es un bloque común (ni flex ni grid), por eso envolver no cambia el layout.
@@ -192,7 +223,7 @@ export function conMain(cuerpo) {
 
 export function construir() {
   const { cuerpo, css } = partes(leerTemplate(readFileSync(ORIGEN, 'utf8')));
-  const jsx = aJsx(conMain(conContacto(conBreakPoint(cuerpo))));
+  const jsx = aJsx(conCabeceraFija(conMain(conContacto(conIdioma(conBreakPoint(cuerpo))))));
   const tsx = `// GENERADO por scripts/generar-landing.mjs desde design/cordada-landing.html. No editar a mano:
 // para cambiar el marcado se cambia el diseño (o el script) y se vuelve a generar.
 import { Fragment, type CSSProperties } from 'react';
@@ -202,13 +233,13 @@ import type { Vista } from '../datos';
 // no están en los tipos de React, por eso pasan por este molde.
 const css = (o: Record<string, string>) => o as CSSProperties;
 
-export function Landing({ accent, brief, onBrief, chips, route, gate, pieces, stats, rules }: Vista) {
+export function Landing({ t, idioma, accent, brief, onBrief, chips, route, gate, pieces, stats, rules }: Vista) {
   return (
 ${jsx}
   );
 }
 `;
-  const baseCss = `/* GENERADO por scripts/generar-landing.mjs: es el CSS global del diseño, sin cambios. */\n${css}\n`;
+  const baseCss = `/* GENERADO por scripts/generar-landing.mjs: el CSS global del diseño, sin cambios, más el recorte horizontal de la página (ver conCabeceraFija). */\n${css}\n${CSS_PAGINA}\n`;
   return { tsx, baseCss, lineas: jsx.split('\n').length };
 }
 
