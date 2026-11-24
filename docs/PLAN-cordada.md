@@ -12,6 +12,9 @@ Pendiente de esta landing. Lo cerrado vive en `docs/CERRADO-cordada.md`; el deta
 4. **`/favicon.ico` responde 404.** Ancla: `index.html:9`. Premisa: el ícono real es `/favicon.svg` y carga bien, pero los navegadores piden además `/favicon.ico` y eso deja un error de consola en cada visita (visto en producción, 23-nov-2026). Salida: `/favicon.ico` responde 200. Prioridad baja.
 5. **El generador deja pasar sin traducir un atributo con texto que no esté en su lista.** Ancla: `scripts/generar-landing.mjs:91`. Premisa: solo `placeholder`, `aria-label`, `title` y `alt` pasan por `t()`; un `value` o `aria-valuetext` con texto saldría en español en `/en` y ningún test lo vería (hoy el diseño no trae ninguno). Salida: el generador falla ante un atributo con letras fuera de la lista. Prioridad baja.
 6. **La cabecera fija y el chequeo de idioma se prueban por texto, no por comportamiento.** Ancla: `src/ingles.test.tsx:150`. Premisa: el test de C6 mira la regla CSS como cadena, y el de «sin palabras en español» quita las etiquetas antes de mirar, así que no ve atributos. Salida: un test que mida la cabecera tras hacer scroll, y el chequeo de idioma con atributos incluidos. Prioridad baja.
+7. **Envío real de punta a punta del formulario de contacto.** Ancla: `src/lib/contacto.ts:72`. Premisa: el formulario está encendido en producción desde el 24-nov-2026 y se probó todo menos un envío válido (la ruta de guardado se midió con un envío inválido a propósito, que llega hasta el CHECK de la tabla: `23514`). Salida: un envío válido muestra «Recibido», la fila aparece en `arcus.breakpoint.biz/admin` → Leads con origen Cordada y `aviso_version = cordada-v1`. Escribe una fila en producción: pide OK de Gustavo.
+8. **Accesibilidad del formulario de contacto.** Ancla: `src/Contacto.tsx:81`. Premisa: el árbol de accesibilidad nombra la casilla de consentimiento como «on» (el label envuelve el texto y el enlace «Leer el aviso»), y los campos obligatorios no llevan `required` ni `aria-required` (navegador en producción, 24-nov-2026). Salida: la casilla tiene un nombre accesible propio y los obligatorios se anuncian antes del error. Prioridad media.
+9. **El texto del aviso dice «el formulario de contacto de esta página» en «Qué datos recibimos».** Ancla: `src/aviso.ts:15`. Premisa: la página del aviso no tiene formulario; el texto está aprobado y congelado como `cordada-v1`. Salida: Gustavo decide si se corrige, y en ese caso sale como `cordada-v2`. Prioridad baja.
 
 ## Cables de Gustavo
 
@@ -19,11 +22,7 @@ Pendiente de esta landing. Lo cerrado vive en `docs/CERRADO-cordada.md`; el deta
 
 ## Bloqueado
 
-- **Encender el formulario de contacto propio** (pedido de Gustavo, 23-nov-2026). Nivel ROJO: escribe datos personales con consentimiento en `landing.contact_requests` de la base de Arcus.
-  - Hecho: formulario integrado; aviso `cordada-v1` aprobado por Gustavo el 24-nov-2026 (`src/aviso.ts`, texto congelado; ninguna fila de la base lo tenía antes); la base acepta el origen `cordada` y sus 11 columnas; el panel de Arcus lo muestra. Visto encendido en un build local con variables de prueba: campos, validación y aviso, sin errores de consola.
-  - Variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` cargadas en el proyecto `cordada` de Vercel (Production) el 24-nov-2026, a pedido de Gustavo: la URL del proyecto de Arcus y su clave publicable, la misma que usa `arcus-web`. El formulario se enciende con el deploy de este commit.
-  - Al encender: probar un envío real de punta a punta (escribe una fila en producción, pide OK) y verlo en `arcus.breakpoint.biz/admin` → Leads; `OR-navegador` contra producción.
-  - Límite decidido: en `/en` el formulario no se muestra nunca; queda el botón hacia el formulario de Break Point, porque el aviso existe solo en español. `/privacidad` no está en el sitemap.
+Nada.
 
 ## Decisiones abiertas
 
