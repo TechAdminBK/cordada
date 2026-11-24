@@ -58,8 +58,9 @@ describe('(a) formulario apagado: la página es la misma que antes de la ranura'
     ['/en', 'Start a project', 'See the gate'],
   ])('%s: un solo botón de respaldo, en el lugar del diseño y con su texto, y ningún formulario', async (ruta, texto, siguiente) => {
     const { render } = await cargar();
-    // Con las variables cargadas: lo que lo mantiene apagado es el aviso sin aprobar del repo.
-    for (const env of [{}, ENV]) {
+    // El aviso del repo está aprobado desde el 24-nov-2026: lo que lo mantiene apagado es que
+    // falte alguna de las dos variables de la base.
+    for (const env of [{}, { VITE_SUPABASE_URL: ENV.VITE_SUPABASE_URL }, { VITE_SUPABASE_ANON_KEY: ENV.VITE_SUPABASE_ANON_KEY }]) {
       const html: string = render(ruta, env);
       expect(cuantos(html, `href="${RESPALDO}"`)).toBe(1);
       const boton = html.slice(html.indexOf(`<a href="${RESPALDO}"`));
@@ -76,14 +77,14 @@ describe('(a) formulario apagado: la página es la misma que antes de la ranura'
     const { App, render } = await cargar();
     const { renderToString } = await import('react-dom/server');
     const { StrictMode } = await import('react');
-    expect(render('/', ENV)).toBe(renderToString(<StrictMode><App lang="es" env={{}} /></StrictMode>));
+    expect(render('/', {})).toBe(renderToString(<StrictMode><App lang="es" env={{}} /></StrictMode>));
     expect(render('/en', ENV)).toBe(renderToString(<StrictMode><App lang="en" env={{}} /></StrictMode>));
     expect(render('/en/', ENV)).toBe(render('/en', {}));
   });
 
   it('apagado, /privacidad no muestra el aviso: renderiza la página de inicio', async () => {
     const { render } = await cargar();
-    expect(render('/privacidad', ENV)).toBe(render('/', ENV));
+    expect(render('/privacidad', {})).toBe(render('/', {}));
   });
 });
 
@@ -181,11 +182,13 @@ describe('(d) el prerender escribe /privacidad solo con el formulario activo', (
     for (const raro of [undefined, null, 'true', 1, {}]) expect(rutasAEscribir(raro)).toEqual(base);
   });
 
-  it('con el aviso que hoy está en el repo no se escribe, aunque estén las variables', async () => {
-    // Este caso cambia el día que Gustavo apruebe el aviso: ahí se invierte a propósito.
+  // Invertido a propósito el 24-nov-2026, cuando Gustavo aprobó el aviso.
+  it('con el aviso que hoy está en el repo se escribe si están las dos variables, y si falta una no', async () => {
     const { formularioActivo } = await cargar();
-    expect(formularioActivo(ENV)).toBe(false);
-    expect(rutasAEscribir(formularioActivo(ENV))).not.toContain(RUTA_AVISO);
+    expect(formularioActivo(ENV)).toBe(true);
+    expect(rutasAEscribir(formularioActivo(ENV))).toContain(RUTA_AVISO);
+    expect(rutasAEscribir(formularioActivo({}))).not.toContain(RUTA_AVISO);
+    expect(rutasAEscribir(formularioActivo({ VITE_SUPABASE_URL: ENV.VITE_SUPABASE_URL }))).not.toContain(RUTA_AVISO);
   });
 
   it('formularioActivo responde lo mismo que el candado de la app', async () => {
@@ -227,7 +230,10 @@ describe('el HTML con el formulario apagado es el que está publicado', () => {
     const { createHash } = await import('node:crypto');
     const { render } = await import('./entry-server');
     expect(createHash('sha256').update(render(ruta, {})).digest('hex').slice(0, 16)).toBe(huella);
-    // Con las variables cargadas pero el aviso sin aprobar, tampoco cambia.
-    expect(createHash('sha256').update(render(ruta, { VITE_SUPABASE_URL: 'https://x.supabase.co', VITE_SUPABASE_ANON_KEY: 'k' })).digest('hex').slice(0, 16)).toBe(huella);
+    // Con el aviso aprobado, las variables encienden el formulario solo en español: / cambia y
+    // /en conserva su huella.
+    const conVariables = createHash('sha256').update(render(ruta, { VITE_SUPABASE_URL: 'https://x.supabase.co', VITE_SUPABASE_ANON_KEY: 'k' })).digest('hex').slice(0, 16);
+    if (ruta === '/en') expect(conVariables).toBe(huella);
+    else expect(conVariables).not.toBe(huella);
   });
 });

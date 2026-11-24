@@ -41,8 +41,8 @@ describe('candado del aviso de privacidad', () => {
   // Cada lead guarda la versión del aviso que la persona aceptó. Si el texto cambia y la versión
   // no, ese registro deja de decir qué aceptó. Cada versión publicada queda acá con la huella de
   // su texto: cambiar el texto obliga a subir la versión y sumar su línea, nunca a pisar una.
-  // Única excepción: `cordada-v1` es un borrador que nadie aceptó todavía (AVISO.aprobado es false),
-  // y por eso su huella se ajustó mientras se completaba. Desde que se apruebe queda congelada.
+  // `cordada-v1` se aprobó el 24-nov-2026 con esta huella (antes de esa fecha era un borrador y se
+  // ajustó; ninguna fila de la base la tenía). Desde entonces está congelada.
   it('la versión identifica un texto y solo uno', () => {
     const HUELLAS: Record<string, string> = {
       'cordada-v1': 'f8bd3acd9c2684cb',
@@ -75,12 +75,18 @@ describe('formulario apagado: queda el botón de respaldo', () => {
     expect(screen.getByRole('heading', { level: 1 }).textContent).toContain('Tu agente entregó');
   });
 
-  it('el aviso que hoy está en el repo no enciende nada (sigue en borrador)', async () => {
-    // Este caso cambia el día que Gustavo apruebe el aviso: ahí se invierte a propósito.
-    expect(avisoListo()).toBe(false);
+  // Invertido a propósito el 24-nov-2026, cuando Gustavo aprobó el aviso: desde entonces lo único
+  // que decide si el formulario se muestra son las dos variables de la base.
+  it('el aviso que hoy está en el repo está aprobado: con las variables enciende, sin ellas no', async () => {
+    expect(avisoListo()).toBe(true);
     const { App } = await import('./App');
     render(<App env={ENV} ruta="/" />);
+    expect(document.querySelector(`a[href="${RESPALDO}"]`)).toBeNull();
+    expect(screen.getByLabelText('Email corporativo')).toBeTruthy();
+    cleanup();
+    render(<App env={{}} ruta="/" />);
     expect(document.querySelectorAll(`a[href="${RESPALDO}"]`)).toHaveLength(1);
+    expect(screen.queryByLabelText('Email corporativo')).toBeNull();
   });
 });
 

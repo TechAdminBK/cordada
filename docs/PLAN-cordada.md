@@ -19,13 +19,11 @@ Pendiente de esta landing. Lo cerrado vive en `docs/CERRADO-cordada.md`; el deta
 
 ## Bloqueado
 
-- **Encender el formulario de contacto propio** (pedido de Gustavo, 23-nov-2026). Nivel ROJO: escribe datos personales con consentimiento en `landing.contact_requests` de la base de Arcus, la tabla que comparten Arcus, Break Point y Cordada.
-  - Hecho: el formulario está integrado y apagado por candado (`contactoActivo` en `src/App.tsx`); la base acepta el origen `cordada` y el panel de Arcus lo muestra; el aviso (`src/aviso.ts`) está completo, con el mismo responsable y la misma vía de derechos que Arcus (dato de Gustavo, 24-nov-2026).
-  - Bloquea 1: **Gustavo aprueba el texto del aviso.** Al aprobarlo, `aprobado` pasa a `true` en `src/aviso.ts`.
-  - Bloquea 2: **variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`** en el proyecto `cordada` de Vercel (las mismas que usa `arcus-web`). Las carga Gustavo.
-  - Antes de encender: contar en la base que ninguna fila tenga `aviso_version = 'cordada-v1'` (consulta de solo lectura); desde la aprobación el texto de esa versión queda congelado y cualquier cambio pide `cordada-v2`.
-  - Al encender: sumar `/privacidad` a `public/sitemap.xml` o marcarla `noindex`; probar un envío real de punta a punta (escribe una fila en producción) y verlo en `arcus.breakpoint.biz/admin` → Leads.
-  - Límite decidido: en `/en` el formulario no se muestra nunca; queda el botón hacia el formulario de Break Point, porque el aviso existe solo en español.
+- **Encender el formulario de contacto propio** (pedido de Gustavo, 23-nov-2026). Nivel ROJO: escribe datos personales con consentimiento en `landing.contact_requests` de la base de Arcus.
+  - Hecho: formulario integrado; aviso `cordada-v1` aprobado por Gustavo el 24-nov-2026 (`src/aviso.ts`, texto congelado; ninguna fila de la base lo tenía antes); la base acepta el origen `cordada` y sus 11 columnas; el panel de Arcus lo muestra. Visto encendido en un build local con variables de prueba: campos, validación y aviso, sin errores de consola.
+  - Bloquea: **variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` en el proyecto `cordada` de Vercel** (medido el 24-nov-2026: el proyecto no tiene ninguna). Las carga Gustavo, con los mismos valores que `arcus-web`, y hace falta un deploy después. Con ellas el formulario se enciende solo.
+  - Al encender: probar un envío real de punta a punta (escribe una fila en producción, pide OK) y verlo en `arcus.breakpoint.biz/admin` → Leads; `OR-navegador` contra producción.
+  - Límite decidido: en `/en` el formulario no se muestra nunca; queda el botón hacia el formulario de Break Point, porque el aviso existe solo en español. `/privacidad` no está en el sitemap.
 
 ## Decisiones abiertas
 

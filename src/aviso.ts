@@ -2,14 +2,15 @@
 // el de Arcus. La versión viaja con cada lead (columna aviso_version), así queda registrado qué
 // texto aceptó cada persona.
 //
-// ESTADO: BORRADOR COMPLETO. Redactado tomando como base el aviso de Arcus; el responsable y la vía
+// ESTADO: APROBADO por Gustavo el 24-nov-2026 (texto de `cordada-v1`, congelado desde entonces:
+// cualquier cambio de texto pide `cordada-v2`). Historia: Redactado tomando como base el aviso de Arcus; el responsable y la vía
 // para ejercer derechos son los mismos que en Arcus (dato de Gustavo, 24-nov-2026). No se publica
 // ni se usa para recibir contactos hasta que Gustavo apruebe el texto; al aprobarlo, APROBADO pasa a true en el mismo
 // commit. Si el texto cambia después, cambia también VERSION.
 
 export const AVISO = {
   version: 'cordada-v1',
-  aprobado: false as boolean,
+  aprobado: true as boolean,
   secciones: [
     ['Responsable del tratamiento', 'Claudio Klinzuck.'],
     ['Qué datos recibimos', 'Nombre, email corporativo, empresa y el texto que escribís en el formulario de contacto de esta página.'],
