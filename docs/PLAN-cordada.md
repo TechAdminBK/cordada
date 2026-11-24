@@ -9,6 +9,7 @@ Pendiente de esta landing. Lo cerrado vive en `docs/CERRADO-cordada.md`; el deta
 1. **El conversor chequea "atributo sin valor" antes de descartar `hint-*` y `data-canvas-*`.** Ancla: `scripts/generar-landing.mjs:91`. Premisa: un `hint-*` sin valor lanza error aunque el código dice que se descarta (hoy el diseño no trae ninguno). Salida: el descarte va primero y un test lo cubre. Prioridad baja.
 2. **Falsos positivos y mensaje engañoso del conversor.** Ancla: `scripts/generar-landing.mjs:86`. Premisa: `title="a = 'b'"` lanza por comilla simple, y `x=a` o `x= "a"` se reportan como "booleano". Falla cerrado; hoy el diseño no trae esos casos. Salida: el chequeo mira solo el delimitador del valor y el mensaje nombra el caso real. Prioridad baja.
 3. **El test de literales del diseño solo mira comillas simples.** Ancla: `src/landing.test.tsx:104`. Premisa: un literal con comillas dobles o backtick en el guion del diseño no se compara contra `src/datos.ts` (hoy hay 0). Salida: el test cubre los tres delimitadores. Prioridad baja.
+4. **`/favicon.ico` responde 404.** Ancla: `index.html:9`. Premisa: el ícono real es `/favicon.svg` y carga bien, pero los navegadores piden además `/favicon.ico` y eso deja un error de consola en cada visita (visto en producción, 23-nov-2026). Salida: `/favicon.ico` responde 200. Prioridad baja.
 
 ## Cables de Gustavo
 
