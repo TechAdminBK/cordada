@@ -12,7 +12,7 @@ export function Landing({ t, idioma, accent, brief, onBrief, chips, route, gate,
       <div className="cd-pagina" style={css({ minHeight: "100vh", background: "#FFFFFF", color: "#0F1020", fontFamily: "'Archivo', system-ui, sans-serif", fontSize: "16px", lineHeight: "1.6", WebkitFontSmoothing: "antialiased" })}>
         {" "}
         {" "}
-        <header style={css({ position: "sticky", top: "0", zIndex: "10", background: "rgba(255,255,255,.9)", backdropFilter: "blur(12px)", borderBottom: "1px solid #ECECE8" })}>
+        <header className="cd-cabecera" style={css({ position: "sticky", top: "0", zIndex: "10", background: "rgba(255,255,255,.9)", backdropFilter: "blur(12px)", borderBottom: "1px solid #ECECE8" })}>
           {" "}
           <nav aria-label={t("Principal")} style={css({ maxWidth: "1240px", margin: "0 auto", padding: "14px 24px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "16px" })}>
             {" "}

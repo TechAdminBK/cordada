@@ -24,4 +24,4 @@ a{color:#4A2FBD}a:hover{color:#3F1BB8}
 .cd-chip:hover{border-color:#0F1020 !important;color:#0F1020 !important}
 button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid #4A2FBD;outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.cd-track,.cd-pulse,.cd-cursor,.cd-rise,.cd-rope,.cd-float,.cd-float2,.cd-spin{animation:none !important}}
-.cd-pagina{overflow-x:hidden}@supports (overflow:clip){.cd-pagina{overflow-x:clip}}
+.cd-pagina{overflow-x:hidden}@supports (overflow:clip){.cd-pagina{overflow-x:clip}}@media (max-width:1039px){.cd-cabecera{position:static !important}}

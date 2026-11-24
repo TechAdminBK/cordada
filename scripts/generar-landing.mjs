@@ -209,14 +209,27 @@ export function conIdioma(cuerpo) {
 // La cabecera es sticky en el diseño, pero el contenedor de la página trae overflow-x: hidden, que
 // lo vuelve contenedor de scroll y la anula (C6). El recorte horizontal pasa a una clase que usa
 // overflow-x: clip donde existe: recorta igual y no crea contenedor de scroll.
+//
+// La cabecera queda fija SOLO donde el menú entra en una fila (C7, decisión de Gustavo del
+// 24-nov-2026). En pantallas angostas el menú se parte en tres filas y fija ocupaba el 21% del alto
+// en un celular y tapaba el formulario; ahí vuelve a irse con el scroll. El estilo sticky del
+// diseño es inline, por eso la regla necesita !important.
 export const CLASE_PAGINA = 'cd-pagina';
-export const CSS_PAGINA = `.${CLASE_PAGINA}{overflow-x:hidden}@supports (overflow:clip){.${CLASE_PAGINA}{overflow-x:clip}}`;
+export const CLASE_CABECERA = 'cd-cabecera';
+// Medido el 24-nov-2026: en español el menú entra en una fila desde 1022 px de ancho de layout
+// (en inglés desde 940). El corte suma los 17 px de una barra de scroll clásica, porque la media
+// query mira el ancho de la ventana con barra incluida.
+export const ANCHO_CABECERA_FIJA = 1040;
+export const CSS_PAGINA = `.${CLASE_PAGINA}{overflow-x:hidden}@supports (overflow:clip){.${CLASE_PAGINA}{overflow-x:clip}}@media (max-width:${ANCHO_CABECERA_FIJA - 1}px){.${CLASE_CABECERA}{position:static !important}}`;
 export function conCabeceraFija(cuerpo) {
   const abre = cuerpo.slice(0, cuerpo.indexOf('>') + 1);
   const recorte = '; overflow-x: hidden';
   if (!abre.startsWith('<div style="min-height: 100vh') || abre.includes('class=')) throw new Error('el contenedor de la página no es el que esperaba');
   if (abre.split(recorte).length !== 2) throw new Error('el contenedor de la página ya no trae "; overflow-x: hidden": revisar conCabeceraFija');
-  return abre.replace(recorte, '').replace('<div ', `<div class="${CLASE_PAGINA}" `) + cuerpo.slice(abre.length);
+  const resto = cuerpo.slice(abre.length);
+  const cabecera = '<header style="position: sticky;';
+  if (resto.split(cabecera).length !== 2) throw new Error('esperaba una sola cabecera sticky en el diseño: revisar conCabeceraFija');
+  return abre.replace(recorte, '').replace('<div ', `<div class="${CLASE_PAGINA}" `) + resto.replace(cabecera, `<header class="${CLASE_CABECERA}" style="position: sticky;`);
 }
 
 // El diseño no trae <main>. Lectores de pantalla y rastreadores lo usan para ubicar el contenido,

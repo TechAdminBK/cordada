@@ -224,8 +224,11 @@ describe('(d) el prerender escribe /privacidad solo con el formulario activo', (
 // propósito (por ejemplo, un texto nuevo del diseño), nunca para hacer pasar el test.
 describe('el HTML con el formulario apagado es el que está publicado', () => {
   it.each([
-    ['/', '4edd049b891de338'],
-    ['/en', 'b29b5ef04a8e8ce2'],
+    // Actualizadas a propósito el 24-nov-2026 (C7): la cabecera sumó la clase `cd-cabecera`. Se
+    // comprobó que quitando esa clase el HTML vuelve a las huellas anteriores (4edd049b891de338 y
+    // b29b5ef04a8e8ce2), o sea que es la única diferencia.
+    ['/', '303f6cd45b67389a'],
+    ['/en', 'e76dad5b2678a441'],
   ])('%s conserva su huella', async (ruta, huella) => {
     const { createHash } = await import('node:crypto');
     const { render } = await import('./entry-server');

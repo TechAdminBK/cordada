@@ -10,7 +10,7 @@ import { chipDefsEn, EN, gateEn, piecesEn, routeEn, rulesEn, statsEn, traducir }
 // @ts-expect-error: módulo .mjs sin tipos; se prueba su comportamiento
 import { conCabecera, hreflang, PAGINAS, URL_SITIO } from '../scripts/prerender.mjs';
 // @ts-expect-error: módulo .mjs sin tipos; se prueba su comportamiento
-import { CLASE_PAGINA, conCabeceraFija, conIdioma, construir } from '../scripts/generar-landing.mjs';
+import { ANCHO_CABECERA_FIJA, CLASE_CABECERA, CLASE_PAGINA, conCabeceraFija, conIdioma, construir } from '../scripts/generar-landing.mjs';
 
 afterEach(cleanup);
 
@@ -160,14 +160,27 @@ describe('cabecera fija (C6)', () => {
     expect(tsx).toContain(`<div className="${CLASE_PAGINA}" style={css({ minHeight: "100vh"`);
     expect(tsx).not.toMatch(/overflowX/);
     expect(baseCss).toContain(`.${CLASE_PAGINA}{overflow-x:hidden}@supports (overflow:clip){.${CLASE_PAGINA}{overflow-x:clip}}`);
-    expect(tsx).toMatch(/<header style=\{css\(\{ position: "sticky", top: "0"/);
+    expect(tsx).toContain(`<header className="${CLASE_CABECERA}" style={css({ position: "sticky", top: "0"`);
+  });
+
+  // C7: fija solo donde el menú entra en una fila. Medido el 24-nov-2026: en español entra desde
+  // 1022 px de layout (73 px de alto); por debajo se parte en dos o tres filas (hasta 177 px en 390).
+  // El corte es 1040 para cubrir una ventana con barra de scroll clásica (17 px).
+  it('por debajo del ancho de escritorio la cabecera deja de ser fija, y la regla le gana al estilo en línea', () => {
+    const { baseCss } = construir();
+    expect(ANCHO_CABECERA_FIJA).toBe(1040);
+    expect(baseCss).toContain(`@media (max-width:${ANCHO_CABECERA_FIJA - 1}px){.${CLASE_CABECERA}{position:static !important}}`);
+    expect(baseCss.split(CLASE_CABECERA).length - 1).toBe(1);
   });
 
   it('conCabeceraFija y conIdioma fallan si el diseño cambia de forma', () => {
-    expect(() => conCabeceraFija('<div style="min-height: 100vh; color: red"><p>x</p></div>')).toThrow(/overflow-x/);
+    const pagina = (dentro: string) => `<div style="min-height: 100vh; color: red; overflow-x: hidden">${dentro}</div>`;
+    expect(() => conCabeceraFija('<div style="min-height: 100vh; color: red"><header style="position: sticky;">h</header></div>')).toThrow(/overflow-x/);
     expect(() => conCabeceraFija('<section style="x"></section>')).toThrow(/no es el que esperaba/);
-    expect(conCabeceraFija('<div style="min-height: 100vh; color: red; overflow-x: hidden"><p>x</p></div>'))
-      .toBe(`<div class="${CLASE_PAGINA}" style="min-height: 100vh; color: red"><p>x</p></div>`);
+    expect(conCabeceraFija(pagina('<header style="position: sticky; top: 0">h</header><p>x</p>')))
+      .toBe(`<div class="${CLASE_PAGINA}" style="min-height: 100vh; color: red"><header class="${CLASE_CABECERA}" style="position: sticky; top: 0">h</header><p>x</p></div>`);
+    expect(() => conCabeceraFija(pagina('<p>sin cabecera</p>'))).toThrow(/una sola cabecera sticky/);
+    expect(() => conCabeceraFija(pagina('<header style="position: sticky;">a</header><header style="position: sticky;">b</header>'))).toThrow(/una sola cabecera sticky/);
     expect(() => conIdioma('<a href="https://breakpoint.biz" style="a">Volver a Break Point</a>')).toThrow(/dos enlaces/);
   });
 });
