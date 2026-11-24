@@ -177,9 +177,22 @@ export function conContacto(cuerpo) {
   return cuerpo.replace(RELLENO_CONTACTO, `href="${CONTACTO}"`);
 }
 
+// El diseño no trae <main>. Lectores de pantalla y rastreadores lo usan para ubicar el contenido,
+// así que todo lo que hay entre la cabecera y el pie queda dentro de uno. El contenedor de la
+// página es un bloque común (ni flex ni grid), por eso envolver no cambia el layout.
+export function conMain(cuerpo) {
+  const finCabecera = cuerpo.indexOf('</header>');
+  const pie = cuerpo.indexOf('<footer');
+  if (finCabecera < 0 || pie < 0 || pie < finCabecera) throw new Error('no encontré la cabecera y el pie para ubicar <main>');
+  if (cuerpo.split('</header>').length !== 2 || cuerpo.split('<footer').length !== 2) throw new Error('esperaba una sola cabecera y un solo pie');
+  if (/<main[ >]/.test(cuerpo)) throw new Error('el diseño ya trae <main>: quitar conMain del generador');
+  const corte = finCabecera + '</header>'.length;
+  return `${cuerpo.slice(0, corte)}<main>${cuerpo.slice(corte, pie)}</main>${cuerpo.slice(pie)}`;
+}
+
 export function construir() {
   const { cuerpo, css } = partes(leerTemplate(readFileSync(ORIGEN, 'utf8')));
-  const jsx = aJsx(conContacto(conBreakPoint(cuerpo)));
+  const jsx = aJsx(conMain(conContacto(conBreakPoint(cuerpo))));
   const tsx = `// GENERADO por scripts/generar-landing.mjs desde design/cordada-landing.html. No editar a mano:
 // para cambiar el marcado se cambia el diseño (o el script) y se vuelve a generar.
 import { Fragment, type CSSProperties } from 'react';

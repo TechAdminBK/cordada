@@ -22,6 +22,7 @@ Pendiente de esta landing. Lo cerrado vive en `docs/CERRADO-cordada.md`; el deta
   - Bloquea 2: **el diseño no tiene campos de nombre ni de email.** Desbloquea: Gustavo define dónde va el formulario (o trae el diseño).
   - Bloquea 3: **Cordada no tiene aviso de privacidad.** El consentimiento de Arcus enlaza a `arcus.breakpoint.biz/privacidad`. Desbloquea: Gustavo define si Cordada usa ese aviso o uno propio.
   - Al activar: `/privacidad` no puede servirse con el HTML prerenderizado de `/` (`scripts/prerender.mjs` siempre escribe la home). El rewrite de `/privacidad` tiene que apuntar a una página propia prerenderizada o a un shell con el root vacío, como hace Arcus con `/admin`; si no, la hidratación no coincide.
+  - Al integrar la rama `feat/contacto`: choca con `main` en `scripts/generar-landing.mjs` y `src/generated/Landing.tsx`. Se resuelve el generador dejando `aJsx(conMain(conContacto(conBreakPoint(cuerpo))))` y se regenera; `Landing.tsx` nunca se resuelve a mano.
   - Además hace falta: variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` en el proyecto de Vercel de Cordada, y sumar el origen "Cordada" al panel de leads de `arcus-web` (`src/admin/SeccionLeads.tsx:25`).
 
 ## Decisiones abiertas

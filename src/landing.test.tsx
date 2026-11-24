@@ -155,3 +155,32 @@ describe('render', () => {
     expect(html).not.toMatch(/\{\{|\}\}/);
   });
 });
+
+describe('landmark main (C4)', () => {
+  // @ts-expect-error: módulo .mjs sin tipos
+  const cargar = () => import('../scripts/generar-landing.mjs');
+
+  it('el contenido queda dentro de un único main, entre la cabecera y el pie', () => {
+    const html = renderToString(<App />);
+    expect(html.match(/<main>/g)).toHaveLength(1);
+    const [antes, resto] = html.split('<main>');
+    const [dentro, despues] = resto.split('</main>');
+    expect(antes).toContain('</header>');
+    expect(antes).not.toContain('<section');
+    expect(dentro.match(/<section/g)).toHaveLength(8);
+    expect(dentro).not.toContain('<header');
+    expect(dentro).not.toContain('<footer');
+    expect(despues).toContain('<footer');
+    expect(despues).not.toContain('<section');
+  });
+
+  it('conMain envuelve solo lo que hay entre cabecera y pie, y falla si no puede ubicarlos', async () => {
+    const { conMain } = await cargar();
+    expect(conMain('<div><header>h</header><section>a</section><footer>f</footer></div>'))
+      .toBe('<div><header>h</header><main><section>a</section></main><footer>f</footer></div>');
+    expect(() => conMain('<div><section>a</section><footer>f</footer></div>')).toThrow(/cabecera y el pie/);
+    expect(() => conMain('<footer>f</footer><header>h</header>')).toThrow(/cabecera y el pie/);
+    expect(() => conMain('<header>h</header><header>h</header><footer>f</footer>')).toThrow(/una sola/);
+    expect(() => conMain('<header>h</header><main>x</main><footer>f</footer>')).toThrow(/ya trae/);
+  });
+});
