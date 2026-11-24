@@ -8,7 +8,8 @@
 //   src/generated/base.css      el CSS global del diseño (keyframes, hovers, foco)
 //
 // Lo que este script agrega al diseño: el enlace de vuelta a Break Point y el de la otra versión de
-// idioma (encabezado y pie), el <main>, y la clase que deja fija la cabecera. Todo texto pasa por
+// idioma (encabezado y pie), el <main>, la clase que deja fija la cabecera, y la ranura de contacto
+// en el lugar del botón "Empezar un proyecto" (ver conContacto). Todo texto pasa por
 // t(), que en español devuelve lo mismo y en inglés lo busca en src/en.ts.
 // Los datos de las listas (ruta, compuerta, piezas, cifras, reglas) viven en src/datos.ts.
 
@@ -24,10 +25,9 @@ const BREAKPOINT = 'https://breakpoint.biz';
 const VOLVER_NAV = `<a href="${BREAKPOINT}" style="color: #4A4A46; text-decoration: none">Volver a Break Point</a>`;
 const VOLVER_PIE = `<a href="${BREAKPOINT}" style="color: #0F1020; font-weight: 600; text-decoration: none">Volver a Break Point</a>`;
 
-// El diseño deja el botón "Empezar un proyecto" con un destino de relleno. Va al formulario de
-// contacto de Break Point (decisión de Gustavo, 23-nov-2026).
+// El diseño deja el botón "Empezar un proyecto" con un destino de relleno. El destino real lo
+// decide la app (src/App.tsx): el formulario propio o el enlace de respaldo.
 const RELLENO_CONTACTO = 'href="[ENLACE DE CONTACTO]"';
-export const CONTACTO = 'https://www.breakpoint.biz/#empecemos';
 
 // ── 1. Sacar el template del bundle ──────────────────────────────────────────────────────────
 export function leerTemplate(html) {
@@ -117,7 +117,8 @@ function texto(crudo) {
   if (t === ' ') return '{" "}';
   return t.split(/(\{\{\s*[^}]+?\s*\}\})/).filter(Boolean).map((p) => {
     const b = p.match(/^\{\{\s*([^}]+?)\s*\}\}$/);
-    return b ? `{${b[1]}}` : `{t(${JSON.stringify(p)})}`;
+    // Un espacio suelto al lado de un binding (la ranura de contacto) no es texto para traducir.
+    return b ? `{${b[1]}}` : p === ' ' ? '{" "}' : `{t(${JSON.stringify(p)})}`;
   }).join('');
 }
 
@@ -172,14 +173,24 @@ export function conBreakPoint(cuerpo) {
 }
 
 // ── 3. Escribir ──────────────────────────────────────────────────────────────────────────────
-// Devuelve el contenido de los dos archivos sin escribirlos: lo usa el test que detecta si el
-// generado quedó desactualizado o alguien lo editó a mano.
-// Reemplaza el destino de relleno del diseño. Si el diseño deja de traerlo (o trae más de uno),
-// falla: mejor enterarse acá que publicar un botón roto.
+// El botón "Empezar un proyecto" del diseño trae un destino de relleno. En el marcado pasa a ser
+// una ranura ({contacto}): la app pone ahí el formulario de contacto o, si no está activo, este
+// mismo botón con un enlace de respaldo. El botón se genera aparte para no retipear su estilo.
+// Si el diseño deja de traer el relleno (o trae más de uno), falla: mejor enterarse acá que
+// publicar un botón roto.
 export function conContacto(cuerpo) {
   const veces = cuerpo.split(RELLENO_CONTACTO).length - 1;
   if (veces !== 1) throw new Error(`esperaba un destino de relleno de contacto en el diseño y hay ${veces}`);
-  return cuerpo.replace(RELLENO_CONTACTO, `href="${CONTACTO}"`);
+  const donde = cuerpo.indexOf(RELLENO_CONTACTO);
+  const cierre = cuerpo.indexOf('</a>', donde);
+  // El relleno tiene que estar dentro de la etiqueta que abre un <a ...>: sin '>' entre medio.
+  const ini = Math.max(cuerpo.lastIndexOf('<a ', donde), cuerpo.lastIndexOf('<a\n', donde));
+  if (ini < 0 || cierre < 0 || cuerpo.slice(ini, donde).includes('>')) {
+    throw new Error('el destino de relleno de contacto no está en un enlace <a> bien formado');
+  }
+  const fin = cierre + '</a>'.length;
+  const boton = cuerpo.slice(ini, fin).replace(RELLENO_CONTACTO, 'href="{{href}}"');
+  return { cuerpo: cuerpo.slice(0, ini) + '{{contacto}}' + cuerpo.slice(fin), boton };
 }
 
 // Enlace a la otra versión de idioma (C5). El diseño es de un solo idioma y no lo trae: va al lado
@@ -221,9 +232,14 @@ export function conMain(cuerpo) {
   return `${cuerpo.slice(0, corte)}<main>${cuerpo.slice(corte, pie)}</main>${cuerpo.slice(pie)}`;
 }
 
+// Devuelve el contenido de los dos archivos sin escribirlos: lo usa el test que detecta si el
+// generado quedó desactualizado o alguien lo editó a mano.
 export function construir() {
-  const { cuerpo, css } = partes(leerTemplate(readFileSync(ORIGEN, 'utf8')));
-  const jsx = aJsx(conCabeceraFija(conMain(conContacto(conIdioma(conBreakPoint(cuerpo))))));
+  const { cuerpo: original, css } = partes(leerTemplate(readFileSync(ORIGEN, 'utf8')));
+  const { cuerpo, boton } = conContacto(conIdioma(conBreakPoint(original)));
+  const jsx = aJsx(conCabeceraFija(conMain(cuerpo)));
+  // El botón pasa por el mismo conversor que el resto: su texto también sale como t("...").
+  const jsxBoton = aJsx(`<span>${boton}</span>`).split('\n').slice(1, -1).join('\n');
   const tsx = `// GENERADO por scripts/generar-landing.mjs desde design/cordada-landing.html. No editar a mano:
 // para cambiar el marcado se cambia el diseño (o el script) y se vuelve a generar.
 import { Fragment, type CSSProperties } from 'react';
@@ -233,9 +249,17 @@ import type { Vista } from '../datos';
 // no están en los tipos de React, por eso pasan por este molde.
 const css = (o: Record<string, string>) => o as CSSProperties;
 
-export function Landing({ t, idioma, accent, brief, onBrief, chips, route, gate, pieces, stats, rules }: Vista) {
+export function Landing({ t, idioma, accent, brief, onBrief, chips, route, gate, pieces, stats, rules, contacto }: Vista) {
   return (
 ${jsx}
+  );
+}
+
+// El botón "Empezar un proyecto" tal como viene en el diseño, con el destino que le pase la app.
+// Recibe t igual que Landing: su texto se traduce como el del resto del marcado.
+export function BotonContacto({ href, t }: { href: string; t: Vista['t'] }) {
+  return (
+${jsxBoton}
   );
 }
 `;

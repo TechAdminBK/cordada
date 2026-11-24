@@ -1,0 +1,94 @@
+/* Formulario de contacto y página del aviso. No vienen del diseño: toman su forma del recuadro
+   del hero (borde tinta de 2px, radio 20, sombra dura, etiquetas en mono) y de su paleta. */
+
+.cd-contacto {
+  flex: 1 1 100%;
+  width: 100%;
+  max-width: 560px;
+  /* Los márgenes ocupan el resto de la fila: el enlace "Ver la compuerta" baja a la siguiente. */
+  margin: 0 max(0px, calc(50% - 280px));
+  box-sizing: border-box;
+  text-align: left;
+  background: #FFFFFF;
+  color: #0F1020;
+  border: 2px solid #0F1020;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 8px 8px 0 #0F1020;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.cd-contacto__campo { display: flex; flex-direction: column; gap: 6px; }
+.cd-contacto__campo label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #5C5C57;
+}
+.cd-contacto input:not([type='checkbox']),
+.cd-contacto textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFFFFF;
+  color: #0F1020;
+  border: 2px solid #DADAD4;
+  border-radius: 12px;
+  padding: 11px 14px;
+  font-family: 'Archivo', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.cd-contacto textarea { resize: vertical; min-height: 104px; }
+.cd-contacto input:not([type='checkbox']):hover,
+.cd-contacto textarea:hover { border-color: #0F1020; }
+.cd-contacto input:focus-visible,
+.cd-contacto textarea:focus-visible { outline: 3px solid #4A2FBD; outline-offset: 3px; border-color: #0F1020; }
+.cd-contacto [aria-invalid='true'] { border-color: #B3261E; }
+.cd-contacto__error { margin: 0; font-size: 14px; color: #B3261E; }
+.cd-contacto__habeas { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.5; color: #4A4A46; cursor: pointer; }
+.cd-contacto__habeas input { flex: none; width: 18px; height: 18px; margin: 2px 0 0; accent-color: #4A2FBD; cursor: pointer; }
+.cd-contacto__enviar {
+  align-self: flex-start;
+  background: #B4CC3A;
+  color: #0F1020;
+  font-family: 'Archivo', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 17px;
+  padding: 16px 28px;
+  border-radius: 14px;
+  border: 2px solid #0F1020;
+  min-height: 52px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.cd-contacto__enviar:disabled { opacity: .6; cursor: progress; }
+.cd-contacto--enviado { align-items: flex-start; gap: 10px; }
+.cd-contacto__sello {
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #0F1020;
+  background: #B4CC3A;
+  border-radius: 999px;
+  padding: 6px 12px;
+}
+.cd-contacto__gracias { margin: 0; font-weight: 700; font-stretch: 110%; font-size: 22px; line-height: 1.25; }
+
+/* Aviso de privacidad */
+.cd-aviso { min-height: 100vh; background: #FFFFFF; color: #0F1020; font-family: 'Archivo', system-ui, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.cd-aviso__cuerpo { max-width: 720px; margin: 0 auto; padding: 56px 24px 96px; }
+.cd-aviso__volver { font-size: 14px; font-weight: 500; text-decoration: none; }
+.cd-aviso h1 { margin: 28px 0 8px; font-weight: 800; font-stretch: 125%; font-size: clamp(34px, 4.6vw, 56px); line-height: 1.02; letter-spacing: -.03em; }
+.cd-aviso__version { margin: 0 0 36px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #5C5C57; }
+.cd-aviso dl { margin: 0; display: flex; flex-direction: column; gap: 22px; }
+.cd-aviso dt { font-weight: 700; font-stretch: 110%; font-size: 18px; }
+.cd-aviso dd { margin: 4px 0 0; color: #4A4A46; }

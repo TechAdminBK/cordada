@@ -3,7 +3,8 @@
 // rastreadores de IA la lean sin ejecutar JavaScript. Sin esto el HTML inicial traía 0 palabras.
 //
 // Escribe dos páginas: / (español) y /en (inglés), cada una con su título, descripción, canonical,
-// imagen y los hreflang que las enlazan entre sí.
+// imagen y los hreflang que las enlazan entre sí. Con el formulario de contacto activo escribe
+// además /privacidad (el aviso que el formulario enlaza); apagado no la escribe, y esa URL da 404.
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -38,6 +39,29 @@ export const PAGINAS = {
   },
 };
 
+// La página del aviso de privacidad. No está en PAGINAS porque no siempre existe: se escribe solo
+// con el formulario de contacto activo (ver rutasAEscribir). Es solo de la versión en español, así
+// que no lleva hreflang hacia /en.
+export const RUTA_AVISO = '/privacidad';
+export const PAGINA_AVISO = {
+  lang: 'es',
+  locale: 'es_AR',
+  title: 'Aviso de privacidad — Cordada',
+  description: 'Aviso de privacidad del formulario de contacto de Cordada.',
+  imagen: '/og-cordada.png',
+  alt: 'Cordada — Tu agente entregó más código del que podés revisar.',
+  sinAlternas: true,
+};
+
+const datosDe = (ruta) => (ruta === RUTA_AVISO ? PAGINA_AVISO : PAGINAS[ruta]);
+
+// Qué páginas escribe el prerender. La decisión del formulario no se toma acá: llega del mismo
+// candado que usa la app (formularioActivo, de src/entry-server.tsx), para que el HTML escrito y
+// lo que el navegador hidrata salgan de una sola respuesta. Solo un `true` explícito suma el aviso.
+export function rutasAEscribir(formularioActivo) {
+  return formularioActivo === true ? [RUTA_AVISO, ...Object.keys(PAGINAS)] : Object.keys(PAGINAS);
+}
+
 export class ErrorPrerender extends Error {}
 
 const escAttr = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
@@ -56,7 +80,7 @@ export function hreflang() {
 // agrega una segunda) y falla si la plantilla no la trae: publicar /en con el título, la canonical
 // o el idioma de la página en español es justo lo que esto viene a evitar.
 export function conCabecera(plantilla, ruta) {
-  const p = PAGINAS[ruta];
+  const p = datosDe(ruta);
   if (!p) throw new ErrorPrerender(`no hay datos de cabecera para ${ruta}`);
   const meta = (attr, nombre, valor) => [new RegExp(`<meta ${attr}="${nombre}" content="[^"]*" />`), `<meta ${attr}="${nombre}" content="${escAttr(valor)}" />`];
   const cambios = [
@@ -79,6 +103,7 @@ export function conCabecera(plantilla, ruta) {
     out = out.replace(re, () => nuevo);
   }
   if (/hreflang=/.test(out)) throw new ErrorPrerender('index.html no debe traer hreflang: los pone el prerender');
+  if (p.sinAlternas) return out;
   return out.replace('</head>', () => `  ${hreflang().join('\n    ')}\n  </head>`);
 }
 
@@ -105,9 +130,9 @@ async function main() {
     build: { ssr: 'src/entry-server.tsx', outDir: SALIDA_SSR, emptyOutDir: true, copyPublicDir: false },
   });
   try {
-    const { render } = await import(pathToFileURL(join(SALIDA_SSR, 'entry-server.js')).href);
-    for (const [ruta, p] of Object.entries(PAGINAS)) {
-      const html = render(p.lang);
+    const { render, formularioActivo } = await import(pathToFileURL(join(SALIDA_SSR, 'entry-server.js')).href);
+    for (const ruta of rutasAEscribir(formularioActivo())) {
+      const html = render(ruta);
       const destino = archivoDe(ruta);
       mkdirSync(dirname(destino), { recursive: true });
       writeFileSync(destino, inyectar(conCabecera(plantilla, ruta), html));

@@ -7,7 +7,7 @@ import type { Vista } from '../datos';
 // no están en los tipos de React, por eso pasan por este molde.
 const css = (o: Record<string, string>) => o as CSSProperties;
 
-export function Landing({ t, idioma, accent, brief, onBrief, chips, route, gate, pieces, stats, rules }: Vista) {
+export function Landing({ t, idioma, accent, brief, onBrief, chips, route, gate, pieces, stats, rules, contacto }: Vista) {
   return (
       <div className="cd-pagina" style={css({ minHeight: "100vh", background: "#FFFFFF", color: "#0F1020", fontFamily: "'Archivo', system-ui, sans-serif", fontSize: "16px", lineHeight: "1.6", WebkitFontSmoothing: "antialiased" })}>
         {" "}
@@ -637,14 +637,7 @@ export function Landing({ t, idioma, accent, brief, onBrief, chips, route, gate,
               </h2>
               {" "}
               <div style={css({ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "12px", marginTop: "44px" })}>
-                {" "}
-                <a href="https://www.breakpoint.biz/#empecemos" className="cd-btn" style={css({ background: "#B4CC3A", color: "#0F1020", fontWeight: "800", fontSize: "17px", padding: "16px 28px", borderRadius: "14px", border: "2px solid #0F1020", textDecoration: "none", minHeight: "52px", boxSizing: "border-box", display: "inline-flex", alignItems: "center", gap: "10px" })}>
-                  {t("Empezar un proyecto ")}
-                  <span aria-hidden="true">
-                    {t("→")}
-                  </span>
-                </a>
-                {" "}
+                {" "}{contacto}{" "}
                 <a href="#compuerta" style={css({ color: "#FFFFFF", fontWeight: "600", fontSize: "17px", padding: "16px 28px", borderRadius: "14px", border: "2px solid rgba(255,255,255,.6)", textDecoration: "none", minHeight: "52px", boxSizing: "border-box", display: "inline-flex", alignItems: "center" })}>
                   {t("Ver la compuerta")}
                 </a>
@@ -702,5 +695,18 @@ export function Landing({ t, idioma, accent, brief, onBrief, chips, route, gate,
         </footer>
         {" "}
       </div>
+  );
+}
+
+// El botón "Empezar un proyecto" tal como viene en el diseño, con el destino que le pase la app.
+// Recibe t igual que Landing: su texto se traduce como el del resto del marcado.
+export function BotonContacto({ href, t }: { href: string; t: Vista['t'] }) {
+  return (
+        <a href={href} className="cd-btn" style={css({ background: "#B4CC3A", color: "#0F1020", fontWeight: "800", fontSize: "17px", padding: "16px 28px", borderRadius: "14px", border: "2px solid #0F1020", textDecoration: "none", minHeight: "52px", boxSizing: "border-box", display: "inline-flex", alignItems: "center", gap: "10px" })}>
+          {t("Empezar un proyecto ")}
+          <span aria-hidden="true">
+            {t("→")}
+          </span>
+        </a>
   );
 }

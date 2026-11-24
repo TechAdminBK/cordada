@@ -19,15 +19,13 @@ Pendiente de esta landing. Lo cerrado vive en `docs/CERRADO-cordada.md`; el deta
 
 ## Bloqueado
 
-- **Formulario de contacto propio, igual al de Arcus en backend y frontend** (pedido de Gustavo, 23-nov-2026). Nivel ROJO: escribe datos personales con consentimiento en una tabla compartida de producción.
-  - Qué es "igual": el envío guarda un lead en `landing.contact_requests` de la base de Arcus (la misma tabla que usan `arcus.breakpoint.biz` y `www.breakpoint.biz`), con validación de campos, consentimiento de habeas data atado a la versión vigente del aviso, estado "enviado" y origen propio para verlo en `arcus.breakpoint.biz/admin` → Leads. Referencias: `arcus-web/src/lib/contact.ts`, `arcus-web/src/components/ContactForm.tsx`, `breakpoint-web/lib/leads.ts`.
-  - Bloquea 1: **no se puede ver ni migrar la base de Arcus desde el conector de Supabase** (la sesión ve Elara, Rendwai, Tizaira y Agentes Educativos, no Arcus). La columna `origen` no está en ninguna migración de los repos: se aplicó a mano, así que no se sabe si acepta un valor nuevo. Desbloquea: dar acceso al proyecto de Arcus en el conector, o que Gustavo corra una consulta de solo lectura sobre los CHECK de la tabla.
-  - Bloquea 2: **el diseño no tiene campos de nombre ni de email.** Desbloquea: Gustavo define dónde va el formulario (o trae el diseño).
-  - Bloquea 3: **Cordada no tiene aviso de privacidad.** El consentimiento de Arcus enlaza a `arcus.breakpoint.biz/privacidad`. Desbloquea: Gustavo define si Cordada usa ese aviso o uno propio.
-  - Al activar: `/privacidad` no puede servirse con el HTML prerenderizado de `/` (`scripts/prerender.mjs` siempre escribe la home). El rewrite de `/privacidad` tiene que apuntar a una página propia prerenderizada o a un shell con el root vacío, como hace Arcus con `/admin`; si no, la hidratación no coincide.
-  - Al integrar la rama `feat/contacto`: choca con `main` en `scripts/generar-landing.mjs` y `src/generated/Landing.tsx`. Se resuelve el generador dejando `aJsx(conMain(conContacto(conBreakPoint(cuerpo))))` y se regenera; `Landing.tsx` nunca se resuelve a mano.
-  - Al integrar con la versión en inglés: `src/App.tsx` tiene que seguir pasando `t`, `idioma` y `lang` a `Landing` (sin eso la página rompe en los dos idiomas). El formulario, el aviso y `BotonContacto` traen textos en español que no pasan por `t()`: hay que traducirlos o no mostrarlos en `/en`, y decidir si existe `/en/privacidad`.
-  - Además hace falta: variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` en el proyecto de Vercel de Cordada, y sumar el origen "Cordada" al panel de leads de `arcus-web` (`src/admin/SeccionLeads.tsx:25`).
+- **Encender el formulario de contacto propio** (pedido de Gustavo, 23-nov-2026). Nivel ROJO: escribe datos personales con consentimiento en `landing.contact_requests` de la base de Arcus, la tabla que comparten Arcus, Break Point y Cordada.
+  - Hecho: el formulario está integrado y apagado por candado (`contactoActivo` en `src/App.tsx`); la base acepta el origen `cordada` y el panel de Arcus lo muestra; el aviso (`src/aviso.ts`) está completo, con el mismo responsable y la misma vía de derechos que Arcus (dato de Gustavo, 24-nov-2026).
+  - Bloquea 1: **Gustavo aprueba el texto del aviso.** Al aprobarlo, `aprobado` pasa a `true` en `src/aviso.ts`.
+  - Bloquea 2: **variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`** en el proyecto `cordada` de Vercel (las mismas que usa `arcus-web`). Las carga Gustavo.
+  - Antes de encender: contar en la base que ninguna fila tenga `aviso_version = 'cordada-v1'` (consulta de solo lectura); desde la aprobación el texto de esa versión queda congelado y cualquier cambio pide `cordada-v2`.
+  - Al encender: sumar `/privacidad` a `public/sitemap.xml` o marcarla `noindex`; probar un envío real de punta a punta (escribe una fila en producción) y verlo en `arcus.breakpoint.biz/admin` → Leads.
+  - Límite decidido: en `/en` el formulario no se muestra nunca; queda el botón hacia el formulario de Break Point, porque el aviso existe solo en español.
 
 ## Decisiones abiertas
 

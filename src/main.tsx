@@ -1,12 +1,15 @@
 import { StrictMode } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
-import { App, langDeRuta } from './App';
+import { App } from './App';
 import './generated/base.css';
+import './contacto.css';
 
 const raiz = document.getElementById('root')!;
+// La ruta real del navegador: de ella salen el idioma y, con el formulario activo, la página del
+// aviso. El prerender le pasa a App la misma ruta (src/entry-server.tsx).
 const arbol = (
   <StrictMode>
-    <App lang={langDeRuta(window.location.pathname)} />
+    <App ruta={window.location.pathname} />
   </StrictMode>
 );
 

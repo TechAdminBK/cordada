@@ -1,6 +1,6 @@
 // Datos de la landing. Copiados del componente del diseño (renderVals), sin cambios de texto:
 // cada cifra sale del registro de una sesión real (commit 29be33c) y no se redondea.
-import type { ChangeEvent } from 'react';
+import type { ChangeEvent, ReactNode } from 'react';
 
 const LIME = '#B4CC3A', VIOLET = '#4A2FBD', BLUE = '#3F7BEA', SOFT = '#EDEAFB', INK = '#0F1020', WHITE = '#FFFFFF',
   LILAC = '#9C8CEB', SKY = '#7FA6F2', REJ = '#D9D3F7';
@@ -77,4 +77,6 @@ export type Vista = {
   pieces: typeof pieces;
   stats: typeof stats;
   rules: typeof rules;
+  /** Lo que va en el lugar del botón "Empezar un proyecto": el formulario o el botón de respaldo. */
+  contacto: ReactNode;
 };

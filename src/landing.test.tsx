@@ -7,7 +7,7 @@ import { afterEach } from 'vitest';
 import { App } from './App';
 import { chipDefs, gate, pieces, route, rules, stats } from './datos';
 // @ts-expect-error: módulo .mjs sin tipos; se prueba su comportamiento
-import { aJsx, conBreakPoint, construir, guionDelDiseno } from '../scripts/generar-landing.mjs';
+import { aJsx, conBreakPoint, conContacto, construir, guionDelDiseno } from '../scripts/generar-landing.mjs';
 
 afterEach(cleanup);
 
@@ -66,6 +66,18 @@ describe('conversor de marcado a JSX', () => {
     expect(() => aJsx('<input disabled>')).toThrow(/booleano/);
     expect(() => aJsx('<p>a &rarr; b</p>')).toThrow(/entidad/);
     expect(aJsx('<p>Git &amp; CI</p>')).toContain('"Git & CI"');
+  });
+
+  it('el botón de contacto se recorta entero y deja una ranura en su lugar', () => {
+    const r = conContacto('<div><a href="[ENLACE DE CONTACTO]" class="cd-btn">Empezar <span>→</span></a><a href="#x">Ver</a></div>');
+    expect(r.cuerpo).toBe('<div>{{contacto}}<a href="#x">Ver</a></div>');
+    expect(r.boton).toBe('<a href="{{href}}" class="cd-btn">Empezar <span>→</span></a>');
+  });
+
+  it('si el relleno de contacto no está en un enlace bien formado, falla en vez de romper el marcado', () => {
+    expect(() => conContacto('<p>texto href="[ENLACE DE CONTACTO]"</p>')).toThrow(/bien formado/);
+    expect(() => conContacto('<a href="#x">uno</a><p href="[ENLACE DE CONTACTO]">dos</p>')).toThrow(/bien formado/);
+    expect(() => conContacto('<a href="#x">sin relleno</a>')).toThrow(/relleno/);
   });
 
   it('el enlace a Break Point entra una vez en el menú y una en el pie', () => {
