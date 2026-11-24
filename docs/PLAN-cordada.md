@@ -21,7 +21,7 @@ Pendiente de esta landing. Lo cerrado vive en `docs/CERRADO-cordada.md`; el deta
 
 - **Encender el formulario de contacto propio** (pedido de Gustavo, 23-nov-2026). Nivel ROJO: escribe datos personales con consentimiento en `landing.contact_requests` de la base de Arcus.
   - Hecho: formulario integrado; aviso `cordada-v1` aprobado por Gustavo el 24-nov-2026 (`src/aviso.ts`, texto congelado; ninguna fila de la base lo tenía antes); la base acepta el origen `cordada` y sus 11 columnas; el panel de Arcus lo muestra. Visto encendido en un build local con variables de prueba: campos, validación y aviso, sin errores de consola.
-  - Bloquea: **variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` en el proyecto `cordada` de Vercel** (medido el 24-nov-2026: el proyecto no tiene ninguna). Las carga Gustavo, con los mismos valores que `arcus-web`, y hace falta un deploy después. Con ellas el formulario se enciende solo.
+  - Variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` cargadas en el proyecto `cordada` de Vercel (Production) el 24-nov-2026, a pedido de Gustavo: la URL del proyecto de Arcus y su clave publicable, la misma que usa `arcus-web`. El formulario se enciende con el deploy de este commit.
   - Al encender: probar un envío real de punta a punta (escribe una fila en producción, pide OK) y verlo en `arcus.breakpoint.biz/admin` → Leads; `OR-navegador` contra producción.
   - Límite decidido: en `/en` el formulario no se muestra nunca; queda el botón hacia el formulario de Break Point, porque el aviso existe solo en español. `/privacidad` no está en el sitemap.
 
